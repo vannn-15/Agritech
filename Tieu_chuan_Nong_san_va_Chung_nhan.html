@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiêu chuẩn Nông sản & Chứng nhận</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .standard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-active {
+            border-bottom: 3px solid #3b82f6;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background: #e5e7eb;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #3b82f6, #93c5fd);
+            transition: width 0.5s ease;
+        }
+        
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #3b82f6;
+        }
+        
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-12 text-center">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Tiêu chuẩn Nông sản & Chứng nhận</h1>
+            <p class="text-lg text-gray-600">Hiểu và tuân thủ các tiêu chuẩn chất lượng để nâng cao giá trị nông sản</p>
+        </header>
+
+        <!-- User Certification Status -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-10">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Trạng thái Chứng nhận của bạn</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Certified Card -->
+                <div class="border-l-4 border-green-500 bg-green-50 p-5 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-check-circle text-green-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold text-gray-800">Đã được chứng nhận</h3>
+                    </div>
+                    <p class="text-gray-700 mb-2">VietGAP cho Lúa ST25 (Vụ Đông Xuân 2023-2024)</p>
+                    <div class="flex items-center text-sm text-green-600">
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        <span>Hết hạn: 30/12/2024</span>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-sm text-gray-500">Mã chứng nhận: VG-2023-1256</span>
+                        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Xem chi tiết</button>
+                    </div>
+                </div>
+                
+                <!-- In Progress Card -->
+                <div class="border-l-4 border-yellow-500 bg-yellow-50 p-5 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-spinner text-yellow-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold text-gray-800">Đang trong quá trình</h3>
+                    </div>
+                    <p class="text-gray-700 mb-2">GlobalGAP cho Xoài</p>
+                    <div class="mb-3">
+                        <div class="text-sm text-gray-600 mb-1">Tiến độ đăng ký:</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Tiếp tục đăng ký</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Standards Navigation -->
+        <div class="mb-8">
+            <div class="flex overflow-x-auto pb-2 space-x-4">
+                <button onclick="filterStandards('all')" class="tab-button px-4 py-2 text-lg font-medium whitespace-nowrap tab-active">Tất cả</button>
+                <button onclick="filterStandards('vietgap')" class="tab-button px-4 py-2 text-lg font-medium whitespace-nowrap">VietGAP</button>
+                <button onclick="filterStandards('globalgap')" class="tab-button px-4 py-2 text-lg font-medium whitespace-nowrap">GlobalGAP</button>
+                <button onclick="filterStandards('organic')" class="tab-button px-4 py-2 text-lg font-medium whitespace-nowrap">Hữu cơ</button>
+                <button onclick="filterStandards('ocop')" class="tab-button px-4 py-2 text-lg font-medium whitespace-nowrap">OCOP</button>
+            </div>
+        </div>
+
+        <!-- Standards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10" id="standards-container">
+            <!-- VietGAP Standard -->
+            <div class="standard-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out" data-category="vietgap">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fas fa-leaf text-blue-500 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">VietGAP</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Quy trình thực hành nông nghiệp tốt của Việt Nam, đảm bảo an toàn thực phẩm, bảo vệ môi trường và sức khỏe người lao động.</p>
+                    
+                    <h4 class="font-medium text-gray-800 mb-2">Yêu cầu chính:</h4>
+                    <ul class="list-disc pl-5 text-gray-600 mb-4">
+                        <li class="mb-1">Kiểm soát nguồn nước</li>
+                        <li class="mb-1">Sử dụng phân bón đúng cách</li>
+                        <li class="mb-1">Ghi chép nhật ký đầy đủ</li>
+                        <li class="mb-1">Kiểm soát dịch hại tổng hợp</li>
+                        <li>Bảo vệ môi trường trong canh tác</li>
+                    </ul>
+                    
+                    <div class="flex justify-between items-center mt-6">
+                        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+                            <i class="fas fa-file-pdf mr-2"></i>Tài liệu hướng dẫn
+                        </a>
+                        <button onclick="showRegisterSteps('VietGAP')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                            Xem quy trình
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GlobalGAP Standard -->
+            <div class="standard-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out" data-category="globalgap">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fas fa-globe-americas text-green-500 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">GlobalGAP</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Tiêu chuẩn quốc tế về thực hành nông nghiệp tốt, giúp nông sản tiếp cận thị trường toàn cầu.</p>
+                    
+                    <h4 class="font-medium text-gray-800 mb-2">Yêu cầu chính:</h4>
+                    <ul class="list-disc pl-5 text-gray-600 mb-4">
+                        <li class="mb-1">Truy xuất nguồn gốc chi tiết</li>
+                        <li class="mb-1">Quản lý chất lượng toàn diện</li>
+                        <li class="mb-1">An toàn lao động cao cấp</li>
+                        <li class="mb-1">Tiêu chuẩn vệ sinh quốc tế</li>
+                        <li>Bảo vệ đa dạng sinh học</li>
+                    </ul>
+                    
+                    <div class="flex justify-between items-center mt-6">
+                        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+                            <i class="fas fa-file-pdf mr-2"></i>Tài liệu hướng dẫn
+                        </a>
+                        <button onclick="showRegisterSteps('GlobalGAP')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                            Xem quy trình
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Organic Standard -->
+            <div class="standard-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out" data-category="organic">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fas fa-seedling text-purple-500 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">Nông nghiệp Hữu cơ</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Hệ thống canh tác không sử dụng hóa chất tổng hợp, hướng đến sản xuất bền vững và thân thiện môi trường.</p>
+                    
+                    <h4 class="font-medium text-gray-800 mb-2">Yêu cầu chính:</h4>
+                    <ul class="list-disc pl-5 text-gray-600 mb-4">
+                        <li class="mb-1">Không sử dụng thuốc trừ sâu hóa học</li>
+                        <li class="mb-1">Chỉ sử dụng phân bón hữu cơ</li>
+                        <li class="mb-1">Thời gian chuyển đổi tối thiểu 3 năm</li>
+                        <li class="mb-1">Kiểm soát sinh học dịch hại</li>
+                        <li>Không sử dụng sinh vật biến đổi gen</li>
+                    </ul>
+                    
+                    <div class="flex justify-between items-center mt-6">
+                        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+                            <i class="fas fa-file-pdf mr-2"></i>Tài liệu hướng dẫn
+                        </a>
+                        <button onclick="showRegisterSteps('Hữu cơ')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                            Xem quy trình
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OCOP Standard -->
+            <div class="standard-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out" data-category="ocop">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fas fa-award text-orange-500 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">Chương trình OCOP</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Mỗi làng một sản phẩm - Chương trình phát triển kinh tế địa phương thông qua đặc trưng nông sản vùng miền.</p>
+                    
+                    <h4 class="font-medium text-gray-800 mb-2">Yêu cầu chính:</h4>
+                    <ul class="list-disc pl-5 text-gray-600 mb-4">
+                        <li class="mb-1">Tính đặc trưng vùng miền</li>
+                        <li class="mb-1">Bao bì, nhãn mác đồng bộ</li>
+                        <li class="mb-1">Tiêu chuẩn chất lượng rõ ràng</li>
+                        <li class="mb-1">Tham gia cộng đồng</li>
+                        <li>Khả năng cạnh tranh thị trường</li>
+                    </ul>
+                    
+                    <div class="flex justify-between items-center mt-6">
+                        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+                            <i class="fas fa-file-pdf mr-2"></i>Tài liệu hướng dẫn
+                        </a>
+                        <button onclick="showRegisterSteps('OCOP')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                            Xem quy trình
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-10">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Lợi ích khi đạt chứng nhận</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="flex items-start">
+                    <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-money-bill-wave text-blue-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Giá bán cao hơn</h3>
+                        <p class="text-gray-600">Nông sản đạt chuẩn có giá trị cao hơn 20-50% so với thông thường.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="bg-green-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-store text-green-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Mở rộng thị trường</h3>
+                        <p class="text-gray-600">Tiếp cận các siêu thị, cửa hàng cao cấp và xuất khẩu.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="bg-purple-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-user-shield text-purple-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Niềm tin người tiêu dùng</h3>
+                        <p class="text-gray-600">Tăng uy tín và độ tin cậy của người tiêu dùng với sản phẩm.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="bg-indigo-50 rounded-xl shadow-md p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Cách đạt chứng nhận dễ dàng hơn</h2>
+            
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-xl font-medium text-gray-800">Thuê tư vấn viên chứng nhận</h3>
+                    <div class="relative inline-block w-12 mr-2 align-middle select-none">
+                        <input type="checkbox" name="toggle" id="toggle-consultant" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                        <label for="toggle-consultant" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4">Các chuyên gia có thể hướng dẫn bạn từng bước, giúp tiết kiệm thời gian và tăng tỷ lệ đạt chứng nhận.</p>
+                <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium">Tìm tư vấn viên</button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-blue-100 p-2 rounded-lg mr-4">
+                            <i class="fas fa-users text-blue-500"></i>
+                        </div>
+                        <h4 class="text-lg font-medium text-gray-800">Tham gia nhóm nông dân</h4>
+                    </div>
+                    <p class="text-gray-600">Học hỏi kinh nghiệm từ những người đã đạt chứng nhận thành công.</p>
+                </div>
+                
+                <div class="bg-white p-5 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-green-100 p-2 rounded-lg mr-4">
+                            <i class="fas fa-book text-green-500"></i>
+                        </div>
+                        <h4 class="text-lg font-medium text-gray-800">Khóa học trực tuyến</h4>
+                    </div>
+                    <p class="text-gray-600">Nắm bắt kiến thức cơ bản qua các khóa học miễn phí từ Bộ NN&PTNT.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Steps Modal -->
+    <div id="register-steps-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[80vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white px-6 py-4 border-b flex justify-between items-center">
+                <h3 id="modal-title" class="text-xl font-semibold text-gray-800">Quy trình đăng ký</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div id="vietgap-steps" class="hidden">
+                    <h4 class="font-medium text-gray-800 mb-3">Quy trình đăng ký VietGAP:</h4>
+                    <ol class="list-decimal pl-5 space-y-3 text-gray-700">
+                        <li>Chuẩn bị hồ sơ theo mẫu của Bộ NN&PTNT</li>
+                        <li>Tiếp nhận và khảo sát ban đầu của cơ quan chứng nhận</li>
+                        <li>Hoàn thiện các điểm chưa đạt yêu cầu</li>
+                        <li>Đánh giá chính thức và cấp chứng nhận</li>
+                        <li>Duy trì và cải tiến hệ thống liên tục</li>
+                    </ol>
+                    <div class="mt-5 p-4 bg-blue-50 rounded-lg">
+                        <p class="text-blue-800"><i class="fas fa-info-circle mr-2"></i>Thời gian trung bình: 2-3 tháng, chi phí khoảng 5-10 triệu đồng</p>
+                    </div>
+                </div>
+                
+                <div id="globalgap-steps" class="hidden">
+                    <h4 class="font-medium text-gray-800 mb-3">Quy trình đăng ký GlobalGAP:</h4>
+                    <ol class="list-decimal pl-5 space-y-3 text-gray-700">
+                        <li>Tìm hiểu các yêu cầu của GlobalGAP</li>
+                        <li>Liên hệ với tổ chức chứng nhận được công nhận</li>
+                        <li>Đăng ký và chuẩn bị đánh giá tiền kiểm tra</li>
+                        <li>Đánh giá chính thức và khắc phục điểm không phù hợp</li>
+                        <li>Nhận chứng chỉ và tham gia chương trình giám sát</li>
+                    </ol>
+                    <div class="mt-5 p-4 bg-blue-50 rounded-lg">
+                        <p class="text-blue-800"><i class="fas fa-info-circle mr-2"></i>Thời gian trung bình: 4-6 tháng, chi phí khoảng 15-30 triệu đồng</p>
+                    </div>
+                </div>
+                
+                <div id="organic-steps" class="hidden">
+                    <h4 class="font-medium text-gray-800 mb-3">Quy trình đăng ký chứng nhận Hữu cơ:</h4>
+                    <ol class="list-decimal pl-5 space-y-3 text-gray-700">
+                        <li>Chuyển đổi đất canh tác (giai đoạn chuyển tiếp tối thiểu 3 năm)</li>
+                        <li>Lập kế hoạch sản xuất hữu cơ</li>
+                        <li>Chọn tổ chức chứng nhận và đăng ký</li>
+                        <li>Thực hiện kiểm tra đánh giá</li>
+                        <li>Nhận chứng nhận và tái đánh giá hàng năm</li>
+                    </ol>
+                    <div class="mt-5 p-4 bg-blue-50 rounded-lg">
+                        <p class="text-blue-800"><i class="fas fa-info-circle mr-2"></i>Quá trình chuyển đổi lâu dài nhưng mang lại giá trị cao</p>
+                    </div>
+                </div>
+                
+                <div id="ocop-steps" class="hidden">
+                    <h4 class="font-medium text-gray-800 mb-3">Quy trình đăng ký OCOP:</h4>
+                    <ol class="list-decimal pl-5 space-y-3 text-gray-700">
+                        <li>Chọn sản phẩm đặc trưng địa phương</li>
+                        <li>Đăng ký với Ban quản lý chương trình OCOP tỉnh</li>
+                        <li>Hoàn thiện hồ sơ và chuẩn bị cơ sở sản xuất</li>
+                        <li>Trải qua đánh giá phân hạng</li>
+                        <li>Nhận chứng nhận và liên kết tiêu thụ sản phẩm</li>
+                    </ol>
+                    <div class="mt-5 p-4 bg-blue-50 rounded-lg">
+                        <p class="text-blue-800"><i class="fas fa-info-circle mr-2"></i>Chương trình hỗ trợ kinh phí đánh giá từ địa phương</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-center">
+                    <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
+                        Đã hiểu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Filter standards by category
+        function filterStandards(category) {
+            const cards = document.querySelectorAll('.standard-card');
+            const tabs = document.querySelectorAll('.tab-button');
+            
+            // Update active tab
+            tabs.forEach(tab => {
+                tab.classList.remove('tab-active');
+                if ((category === 'all' && tab.textContent === 'Tất cả') || 
+                    (category === 'vietgap' && tab.textContent === 'VietGAP') ||
+                    (category === 'globalgap' && tab.textContent === 'GlobalGAP') ||
+                    (category === 'organic' && tab.textContent === 'Hữu cơ') ||
+                    (category === 'ocop' && tab.textContent === 'OCOP')) {
+                    tab.classList.add('tab-active');
+                }
+            });
+            
+            // Show/hide cards based on category
+            cards.forEach(card => {
+                if (category === 'all') {
+                    card.classList.remove('hidden');
+                } else {
+                    if (card.dataset.category === category) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                }
+            });
+            
+            // Smooth scroll to standards container
+            document.getElementById('standards-container').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+        
+        // Show register steps modal
+        function showRegisterSteps(standard) {
+            const modal = document.getElementById('register-steps-modal');
+            const title = document.getElementById('modal-title');
+            
+            // Hide all steps first
+            document.querySelectorAll('#register-steps-modal > div > div > div').forEach(div => {
+                div.classList.add('hidden');
+            });
+            
+            // Show the relevant steps and update title
+            title.textContent = `Quy trình đăng ký ${standard}`;
+            
+            if (standard === 'VietGAP') {
+                document.getElementById('vietgap-steps').classList.remove('hidden');
+            } else if (standard === 'GlobalGAP') {
+                document.getElementById('globalgap-steps').classList.remove('hidden');
+            } else if (standard === 'Hữu cơ') {
+                document.getElementById('organic-steps').classList.remove('hidden');
+            } else if (standard === 'OCOP') {
+                document.getElementById('ocop-steps').classList.remove('hidden');
+            }
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('register-steps-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Toggle dark mode (example functionality)
+        document.getElementById('toggle-dark-mode').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+        });
+    </script>
+</body>
+</html>

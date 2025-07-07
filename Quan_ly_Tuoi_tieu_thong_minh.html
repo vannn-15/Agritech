@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Quản lý Vườn Thông minh</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .farm-area {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .farm-area:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .chart-container {
+            height: 200px;
+        }
+        .alert-banner {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-green-700">Trang Quản lý Vườn Thông minh</h1>
+                    <p class="text-gray-600">Hệ thống giám sát và tối ưu tưới tiêu tự động</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex items-center space-x-4">
+                    <div class="bg-white p-3 rounded-lg shadow-sm flex items-center">
+                        <i class="fas fa-cloud-sun text-blue-500 text-xl mr-2"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Thời tiết</p>
+                            <p class="font-medium">Nắng, 28°C</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm flex items-center">
+                        <i class="fas fa-calendar-day text-purple-500 text-xl mr-2"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Hôm nay</p>
+                            <p class="font-medium" id="current-date">15/07/2023</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Alert Banner -->
+        <div id="alert-banner" class="alert-banner hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    <p><strong>Cảnh báo:</strong> <span id="alert-message">Khu vực B đang thiếu nước nghiêm trọng!</span></p>
+                </div>
+                <button onclick="closeAlert()" class="text-red-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Farm Map Section -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Sơ đồ Nông trại</h2>
+                    <div class="flex space-x-2">
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 rounded-full bg-green-500 mr-1"></div>
+                            <span class="text-xs">Đủ ẩm</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 rounded-full bg-yellow-500 mr-1"></div>
+                            <span class="text-xs">Cần tưới</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 rounded-full bg-red-500 mr-1"></div>
+                            <span class="text-xs">Khẩn cấp</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative bg-gray-100 rounded-lg overflow-hidden" style="height: 400px;">
+                    <!-- Farm Map -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="grid grid-cols-2 grid-rows-2 gap-4 w-full h-full p-4">
+                            <!-- Area A -->
+                            <div id="area-a" class="farm-area bg-green-100 border-2 border-green-400 rounded-lg flex flex-col items-center justify-center p-4" onclick="selectArea('A')">
+                                <div class="w-12 h-12 bg-green-400 rounded-full flex items-center justify-center mb-2">
+                                    <i class="fas fa-leaf text-white text-xl"></i>
+                                </div>
+                                <h3 class="font-medium">Khu vực A</h3>
+                                <p class="text-sm text-green-700">Độ ẩm: 65%</p>
+                            </div>
+                            
+                            <!-- Area B -->
+                            <div id="area-b" class="farm-area bg-red-100 border-2 border-red-400 rounded-lg flex flex-col items-center justify-center p-4" onclick="selectArea('B')">
+                                <div class="w-12 h-12 bg-red-400 rounded-full flex items-center justify-center mb-2">
+                                    <i class="fas fa-leaf text-white text-xl"></i>
+                                </div>
+                                <h3 class="font-medium">Khu vực B</h3>
+                                <p class="text-sm text-red-700">Độ ẩm: 22%</p>
+                            </div>
+                            
+                            <!-- Area C -->
+                            <div id="area-c" class="farm-area bg-yellow-100 border-2 border-yellow-400 rounded-lg flex flex-col items-center justify-center p-4" onclick="selectArea('C')">
+                                <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mb-2">
+                                    <i class="fas fa-leaf text-white text-xl"></i>
+                                </div>
+                                <h3 class="font-medium">Khu vực C</h3>
+                                <p class="text-sm text-yellow-700">Độ ẩm: 42%</p>
+                            </div>
+                            
+                            <!-- Area D -->
+                            <div id="area-d" class="farm-area bg-green-100 border-2 border-green-400 rounded-lg flex flex-col items-center justify-center p-4" onclick="selectArea('D')">
+                                <div class="w-12 h-12 bg-green-400 rounded-full flex items-center justify-center mb-2">
+                                    <i class="fas fa-leaf text-white text-xl"></i>
+                                </div>
+                                <h3 class="font-medium">Khu vực D</h3>
+                                <p class="text-sm text-green-700">Độ ẩm: 68%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sensor Data and Recommendations -->
+            <div class="space-y-6">
+                <!-- Current Sensor Data -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Thông số hiện tại</h2>
+                    <div id="sensor-data">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-blue-100 p-3 rounded-full mr-3">
+                                <i class="fas fa-tint text-blue-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Độ ẩm đất</p>
+                                <p class="text-xl font-medium"><span id="moisture-value">65</span>%</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center mb-4">
+                            <div class="bg-orange-100 p-3 rounded-full mr-3">
+                                <i class="fas fa-temperature-high text-orange-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Nhiệt độ</p>
+                                <p class="text-xl font-medium"><span id="temp-value">28</span>°C</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 p-3 rounded-full mr-3">
+                                <i class="fas fa-sun text-purple-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Ánh sáng</p>
+                                <p class="text-xl font-medium"><span id="light-value">850</span> lux</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 chart-container">
+                        <canvas id="moisture-chart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Irrigation Recommendation -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-800">Khuyến nghị tưới tiêu</h2>
+                        <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                            <i class="fas fa-robot mr-1"></i> AI đề xuất
+                        </div>
+                    </div>
+                    
+                    <div id="recommendation-content">
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r mb-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="text-sm font-medium text-blue-800" id="selected-area-text">Khu vực A</h3>
+                                    <div class="mt-2 text-sm text-blue-700">
+                                        <p id="recommendation-text">Độ ẩm đất đang tốt, không cần tưới.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r mb-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-clock text-yellow-500 mt-1"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="text-sm font-medium text-yellow-800">Lịch tưới tiếp theo</h3>
+                                    <div class="mt-2 text-sm text-yellow-700">
+                                        <p id="next-irrigation">Khu vực C: 19:00 hôm nay</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button id="irrigate-btn" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg flex items-center justify-center" onclick="irrigateNow()">
+                                <i class="fas fa-tint mr-2"></i> Tưới ngay
+                            </button>
+                            <button class="w-full mt-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-2 px-4 rounded-lg flex items-center justify-center" onclick="scheduleIrrigation()">
+                                <i class="far fa-calendar-alt mr-2"></i> Lên lịch tưới
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activities -->
+        <div class="mt-8 bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Hoạt động gần đây</h2>
+            <div class="space-y-4">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 bg-green-100 p-2 rounded-full">
+                        <i class="fas fa-tint text-green-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900">Hệ thống tưới đã hoạt động</p>
+                        <p class="text-sm text-gray-500">Khu vực A được tưới 5 lít nước lúc 06:30 sáng nay</p>
+                    </div>
+                    <div class="ml-auto text-xs text-gray-500">2 giờ trước</div>
+                </div>
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 bg-blue-100 p-2 rounded-full">
+                        <i class="fas fa-cloud text-blue-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900">Cập nhật dự báo thời tiết</p>
+                        <p class="text-sm text-gray-500">Nắng nóng trong 2 ngày tới, nhiệt độ cao nhất 32°C</p>
+                    </div>
+                    <div class="ml-auto text-xs text-gray-500">4 giờ trước</div>
+                </div>
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 bg-yellow-100 p-2 rounded-full">
+                        <i class="fas fa-exclamation-triangle text-yellow-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900">Cảnh báo độ ẩm thấp</p>
+                        <p class="text-sm text-gray-500">Khu vực B có độ ẩm đất xuống dưới 25%</p>
+                    </div>
+                    <div class="ml-auto text-xs text-gray-500">6 giờ trước</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Irrigation -->
+    <div id="irrigation-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900" id="modal-title">Xác nhận tưới tiêu</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mb-4">
+                <p id="modal-message">Bạn có chắc muốn tưới khu vực này ngay bây giờ?</p>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
+                <button type="button" onclick="confirmIrrigation()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+                    Xác nhận
+                </button>
+                <button type="button" onclick="closeModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Hủy bỏ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Set current date
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString('vi-VN');
+        document.getElementById('current-date').textContent = formattedDate;
+        
+        // Initialize chart
+        const ctx = document.getElementById('moisture-chart').getContext('2d');
+        const moistureChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                datasets: [{
+                    label: 'Độ ẩm đất (%)',
+                    data: [62, 60, 58, 55, 60, 65],
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 20,
+                        max: 80
+                    }
+                }
+            }
+        });
+        
+        // Area selection function
+        let selectedArea = 'A';
+        
+        function selectArea(area) {
+            selectedArea = area;
+            
+            // Update UI for selected area
+            document.querySelectorAll('.farm-area').forEach(el => {
+                el.classList.remove('ring-2', 'ring-offset-2', 'ring-green-500');
+            });
+            document.getElementById(`area-${area.toLowerCase()}`).classList.add('ring-2', 'ring-offset-2', 'ring-green-500');
+            
+            // Update sensor data based on area
+            let moisture, temp, light;
+            switch(area) {
+                case 'A':
+                    moisture = 65;
+                    temp = 28;
+                    light = 850;
+                    document.getElementById('recommendation-text').textContent = 'Độ ẩm đất đang tốt, không cần tưới.';
+                    document.getElementById('next-irrigation').textContent = 'Khu vực C: 19:00 hôm nay';
+                    document.getElementById('irrigate-btn').classList.remove('bg-red-600', 'hover:bg-red-700');
+                    document.getElementById('irrigate-btn').classList.add('bg-green-600', 'hover:bg-green-700');
+                    document.getElementById('alert-banner').classList.add('hidden');
+                    break;
+                case 'B':
+                    moisture = 22;
+                    temp = 30;
+                    light = 950;
+                    document.getElementById('recommendation-text').textContent = 'Cần tưới gấp 15 lít/m² ngay bây giờ do độ ẩm quá thấp.';
+                    document.getElementById('next-irrigation').textContent = 'Ngay lập tức';
+                    document.getElementById('irrigate-btn').classList.remove('bg-green-600', 'hover:bg-green-700');
+                    document.getElementById('irrigate-btn').classList.add('bg-red-600', 'hover:bg-red-700');
+                    document.getElementById('alert-message').textContent = 'Khu vực B đang thiếu nước nghiêm trọng!';
+                    document.getElementById('alert-banner').classList.remove('hidden');
+                    break;
+                case 'C':
+                    moisture = 42;
+                    temp = 27;
+                    light = 800;
+                    document.getElementById('recommendation-text').textContent = 'Cần tưới 10 lít/m² vào lúc 19:00 hôm nay.';
+                    document.getElementById('next-irrigation').textContent = 'Khu vực C: 19:00 hôm nay';
+                    document.getElementById('irrigate-btn').classList.remove('bg-red-600', 'hover:bg-red-700');
+                    document.getElementById('irrigate-btn').classList.add('bg-green-600', 'hover:bg-green-700');
+                    document.getElementById('alert-banner').classList.add('hidden');
+                    break;
+                case 'D':
+                    moisture = 68;
+                    temp = 26;
+                    light = 750;
+                    document.getElementById('recommendation-text').textContent = 'Độ ẩm đất đang tốt, không cần tưới.';
+                    document.getElementById('next-irrigation').textContent = 'Khu vực C: 19:00 hôm nay';
+                    document.getElementById('irrigate-btn').classList.remove('bg-red-600', 'hover:bg-red-700');
+                    document.getElementById('irrigate-btn').classList.add('bg-green-600', 'hover:bg-green-700');
+                    document.getElementById('alert-banner').classList.add('hidden');
+                    break;
+            }
+            
+            document.getElementById('moisture-value').textContent = moisture;
+            document.getElementById('temp-value').textContent = temp;
+            document.getElementById('light-value').textContent = light;
+            document.getElementById('selected-area-text').textContent = `Khu vực ${area}`;
+            
+            // Update chart data
+            moistureChart.data.datasets[0].data = generateMoistureData(moisture);
+            moistureChart.update();
+        }
+        
+        function generateMoistureData(current) {
+            const base = current - 10;
+            return [
+                base + Math.floor(Math.random() * 10),
+                base + 3 + Math.floor(Math.random() * 8),
+                base + 5 + Math.floor(Math.random() * 6),
+                base + 2 + Math.floor(Math.random() * 9),
+                base + 7 + Math.floor(Math.random() * 4),
+                current
+            ];
+        }
+        
+        // Irrigation functions
+        function irrigateNow() {
+            document.getElementById('modal-title').textContent = `Xác nhận tưới Khu vực ${selectedArea}`;
+            document.getElementById('modal-message').textContent = `Bạn có chắc muốn tưới Khu vực ${selectedArea} ngay bây giờ?`;
+            document.getElementById('irrigation-modal').classList.remove('hidden');
+        }
+        
+        function scheduleIrrigation() {
+            document.getElementById('modal-title').textContent = `Lên lịch tưới Khu vực ${selectedArea}`;
+            document.getElementById('modal-message').textContent = `Chọn thời gian tưới cho Khu vực ${selectedArea}:`;
+            // Here you would add a datetime picker in a real implementation
+            document.getElementById('irrigation-modal').classList.remove('hidden');
+        }
+        
+        function closeModal() {
+            document.getElementById('irrigation-modal').classList.add('hidden');
+        }
+        
+        function confirmIrrigation() {
+            closeModal();
+            // In a real app, this would trigger the irrigation system
+            alert(`Đã kích hoạt hệ thống tưới cho Khu vực ${selectedArea}`);
+            
+            // Update the area to show it's been watered
+            if (selectedArea === 'B') {
+                document.getElementById('area-b').classList.remove('bg-red-100', 'border-red-400');
+                document.getElementById('area-b').classList.add('bg-green-100', 'border-green-400');
+                document.getElementById('area-b').querySelector('p').textContent = 'Độ ẩm: 65%';
+                document.getElementById('area-b').querySelector('p').classList.remove('text-red-700');
+                document.getElementById('area-b').querySelector('p').classList.add('text-green-700');
+                document.getElementById('area-b').querySelector('div').classList.remove('bg-red-400');
+                document.getElementById('area-b').querySelector('div').classList.add('bg-green-400');
+                
+                // Update recommendation
+                document.getElementById('recommendation-text').textContent = 'Độ ẩm đất đã được cải thiện sau khi tưới.';
+                document.getElementById('alert-banner').classList.add('hidden');
+            }
+        }
+        
+        function closeAlert() {
+            document.getElementById('alert-banner').classList.add('hidden');
+        }
+        
+        // Initialize by selecting area A
+        window.onload = function() {
+            selectArea('A');
+            
+            // Show alert for area B after 3 seconds to demonstrate
+            setTimeout(() => {
+                selectArea('B');
+            }, 3000);
+        };
+    </script>
+</body>
+</html>

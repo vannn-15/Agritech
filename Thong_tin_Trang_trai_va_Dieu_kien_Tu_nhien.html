@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin Trang trại của tôi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .map-container {
+            height: 300px;
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #4b5563;
+        }
+        
+        .info-card {
+            transition: all 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .edit-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .edit-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 640px) {
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex items-center">
+                <div class="bg-green-100 p-3 rounded-full mr-4">
+                    <i class="fas fa-tractor text-green-600 text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-green-800 section-title">Thông tin Trang trại của tôi</h1>
+                    <p class="text-gray-600 mt-2">Tổng quan về môi trường canh tác và điều kiện tự nhiên</p>
+                </div>
+            </div>
+            <button id="editAllBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center edit-btn">
+                <i class="fas fa-edit mr-2"></i> Cập nhật thông tin
+            </button>
+        </div>
+        
+        <!-- Farm Location Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 info-card relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Farm location" class="absolute top-0 left-0 w-full h-full object-cover opacity-10">
+            <div class="flex items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                    <i class="fas fa-map-marked-alt text-green-500 mr-2 text-xl"></i>
+                    Vị trí Trang trại
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2 flex items-center">
+                            <i class="fas fa-home text-gray-500 mr-2"></i>
+                            Địa chỉ
+                        </label>
+                        <p class="text-gray-600" id="farmAddress">Ấp 3, Xã An Phú, Huyện Củ Chi, TP.HCM</p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2 flex items-center">
+                            <i class="fas fa-map-pin text-gray-500 mr-2"></i>
+                            Tọa độ
+                        </label>
+                        <p class="text-gray-600" id="farmCoordinates">10.8231° N, 106.6297° E</p>
+                    </div>
+                    <button id="editLocationBtn" class="text-green-600 hover:text-green-800 flex items-center edit-btn">
+                        <i class="fas fa-pencil-alt mr-2"></i> Chỉnh sửa
+                    </button>
+                </div>
+                
+                <div class="map-container">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt text-4xl mb-2 text-green-600"></i>
+                        <p class="font-medium">Bản đồ vị trí trang trại</p>
+                        <div class="mt-4 flex justify-center space-x-4">
+                            <div class="text-center">
+                                <i class="fas fa-compass text-blue-500 text-xl"></i>
+                                <p class="text-xs mt-1">Định vị</p>
+                            </div>
+                            <div class="text-center">
+                                <i class="fas fa-ruler-combined text-yellow-500 text-xl"></i>
+                                <p class="text-xs mt-1">Đo đạc</p>
+                            </div>
+                            <div class="text-center">
+                                <i class="fas fa-layer-group text-purple-500 text-xl"></i>
+                                <p class="text-xs mt-1">Lớp bản đồ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Climate Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 info-card relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1469122312224-c5846569feb1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Climate" class="absolute top-0 left-0 w-full h-full object-cover opacity-10">
+            <div class="flex items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                    <i class="fas fa-cloud-sun text-blue-500 mr-2 text-xl"></i>
+                    Đặc điểm Vùng Khí hậu
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2 flex items-center">
+                            <i class="fas fa-globe-asia text-gray-500 mr-2"></i>
+                            Loại khí hậu
+                        </label>
+                        <p class="text-gray-600" id="climateType">Nhiệt đới ẩm gió mùa</p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2 flex items-center">
+                            <i class="fas fa-temperature-high text-gray-500 mr-2"></i>
+                            Nhiệt độ trung bình
+                        </label>
+                        <p class="text-gray-600" id="avgTemperature">25-30°C</p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2 flex items-center">
+                            <i class="fas fa-cloud-rain text-gray-500 mr-2"></i>
+                            Lượng mưa trung bình
+                        </label>
+                        <p class="text-gray-600" id="avgRainfall">1500-2000 mm/năm</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2 flex items-center">
+                            <i class="fas fa-sun text-gray-500 mr-2"></i>
+                            Số giờ nắng trung bình
+                        </label>
+                        <p class="text-gray-600" id="avgSunshine">6-8 giờ/ngày</p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2 flex items-center">
+                            <i class="fas fa-calendar-alt text-gray-500 mr-2"></i>
+                            Mùa vụ chính
+                        </label>
+                        <p class="text-gray-600" id="mainSeasons">Mùa mưa (Tháng 5 - Tháng 10), Mùa khô (Tháng 11 - Tháng 4)</p>
+                    </div>
+                    <button id="editClimateBtn" class="text-blue-600 hover:text-blue-800 flex items-center edit-btn">
+                        <i class="fas fa-pencil-alt mr-2"></i> Chỉnh sửa
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Soil Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 info-card relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1586771107445-d3be8888c38b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Soil" class="absolute top-0 left-0 w-full h-full object-cover opacity-10">
+            <img src="https://images.unsplash.com/photo-1586771107445-d3be8888c38b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Soil" class="absolute top-0 left-0 w-full h-full object-cover opacity-10">
+            <div class="flex items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                    <i class="fas fa-mountain text-yellow-500 mr-2 text-xl"></i>
+                    Đặc điểm Đất đai
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2 flex items-center">
+                            <i class="fas fa-mountain text-gray-500 mr-2"></i>
+                            Loại đất chính
+                        </label>
+                        <p class="text-gray-600" id="soilType">Đất phù sa</p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2 flex items-center">
+                            <i class="fas fa-flask text-gray-500 mr-2"></i>
+                            Độ pH
+                        </label>
+                        <p class="text-gray-600" id="soilPH">pH 6.0 - 6.5</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2 flex items-center">
+                            <i class="fas fa-layer-group text-gray-500 mr-2"></i>
+                            Thành phần đất cơ bản
+                        </label>
+                        <p class="text-gray-600" id="soilComposition">Đất thịt nhẹ, giàu hữu cơ</p>
+                    </div>
+                    <button id="editSoilBtn" class="text-yellow-600 hover:text-yellow-800 flex items-center edit-btn">
+                        <i class="fas fa-pencil-alt mr-2"></i> Chỉnh sửa
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Infrastructure Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 info-card relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1590674899484-d5640e854598?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Infrastructure" class="absolute top-0 left-0 w-full h-full object-cover opacity-10">
+            <img src="https://images.unsplash.com/photo-1590674899484-d5640e854598?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Infrastructure" class="absolute top-0 left-0 w-full h-full object-cover opacity-10">
+            <div class="flex items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                    <i class="fas fa-tools text-purple-600 mr-2 text-xl"></i>
+                    Thông tin Hạ tầng
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2 flex items-center">
+                            <i class="fas fa-tint text-gray-800 mr-2"></i>
+                            Nguồn nước tưới
+                        </label>
+                        <p class="text-gray-600" id="waterSource">Sông A, Giếng khoan</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2 flex items-center">
+                            <i class="fas fa-water text-gray-500 mr-2"></i>
+                            Hệ thống tưới
+                        </label>
+                        <p class="text-gray-600" id="irrigationSystem">Bán tự động</p>
+                    </div>
+                    <button id="editInfraBtn" class="text-purple-600 hover:text-purple-800 flex items-center edit-btn">
+                        <i class="fas fa-pencil-alt mr-2"></i> Chỉnh sửa
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold" id="modalTitle">Chỉnh sửa thông tin</h3>
+                <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="modalContent" class="mb-6">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button id="cancelEditBtn" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">Hủy</button>
+                <button id="saveEditBtn" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Lưu thay đổi</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Current farm data
+        const farmData = {
+            location: {
+                address: "Ấp 3, Xã An Phú, Huyện Củ Chi, TP.HCM",
+                coordinates: "10.8231° N, 106.6297° E"
+            },
+            climate: {
+                type: "Nhiệt đới ẩm gió mùa",
+                temperature: "25-30°C",
+                rainfall: "1500-2000 mm/năm",
+                sunshine: "6-8 giờ/ngày",
+                seasons: "Mùa mưa (Tháng 5 - Tháng 10), Mùa khô (Tháng 11 - Tháng 4)"
+            },
+            soil: {
+                type: "Đất phù sa",
+                ph: "pH 6.0 - 6.5",
+                composition: "Đất thịt nhẹ, giàu hữu cơ"
+            },
+            infrastructure: {
+                water: "Sông A, Giếng khoan",
+                irrigation: "Bán tự động"
+            }
+        };
+
+        // DOM elements
+        const editModal = document.getElementById('editModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const saveEditBtn = document.getElementById('saveEditBtn');
+        
+        // Edit buttons
+        const editAllBtn = document.getElementById('editAllBtn');
+        const editLocationBtn = document.getElementById('editLocationBtn');
+        const editClimateBtn = document.getElementById('editClimateBtn');
+        const editSoilBtn = document.getElementById('editSoilBtn');
+        const editInfraBtn = document.getElementById('editInfraBtn');
+
+        // Open modal with specific form
+        function openEditModal(section) {
+            modalTitle.textContent = `Chỉnh sửa ${section}`;
+            
+            let formHTML = '';
+            let currentData = {};
+            
+            switch(section) {
+                case 'Vị trí':
+                    currentData = farmData.location;
+                    formHTML = `
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 mb-1">Địa chỉ</label>
+                                <input type="text" id="editAddress" value="${currentData.address}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-1">Tọa độ</label>
+                                <input type="text" id="editCoordinates" value="${currentData.coordinates}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'Khí hậu':
+                    currentData = farmData.climate;
+                    formHTML = `
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 mb-1">Loại khí hậu</label>
+                                <input type="text" id="editClimateType" value="${currentData.type}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-1">Nhiệt độ trung bình</label>
+                                <input type="text" id="editTemperature" value="${currentData.temperature}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-1">Lượng mưa trung bình</label>
+                                <input type="text" id="editRainfall" value="${currentData.rainfall}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-1">Số giờ nắng trung bình</label>
+                                <input type="text" id="editSunshine" value="${currentData.sunshine}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-1">Mùa vụ chính</label>
+                                <input type="text" id="editSeasons" value="${currentData.seasons}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'Đất đai':
+                    currentData = farmData.soil;
+                    formHTML = `
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 mb-1">Loại đất chính</label>
+                                <select id="editSoilType" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                    <option value="Đất phù sa" ${currentData.type === 'Đất phù sa' ? 'selected' : ''}>Đất phù sa</option>
+                                    <option value="Đất feralit" ${currentData.type === 'Đất feralit' ? 'selected' : ''}>Đất feralit</option>
+                                    <option value="Đất cát" ${currentData.type === 'Đất cát' ? 'selected' : ''}>Đất cát</option>
+                                    <option value="Đất sét" ${currentData.type === 'Đất sét' ? 'selected' : ''}>Đất sét</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-1">Độ pH</label>
+                                <input type="text" id="editSoilPH" value="${currentData.ph}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-1">Thành phần đất</label>
+                                <input type="text" id="editSoilComposition" value="${currentData.composition}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'Hạ tầng':
+                    currentData = farmData.infrastructure;
+                    formHTML = `
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 mb-1">Nguồn nước tưới</label>
+                                <input type="text" id="editWaterSource" value="${currentData.water}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-1">Hệ thống tưới</label>
+                                <select id="editIrrigation" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                    <option value="Thủ công" ${currentData.irrigation === 'Thủ công' ? 'selected' : ''}>Thủ công</option>
+                                    <option value="Bán tự động" ${currentData.irrigation === 'Bán tự động' ? 'selected' : ''}>Bán tự động</option>
+                                    <option value="Tự động" ${currentData.irrigation === 'Tự động' ? 'selected' : ''}>Tự động</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'Tất cả':
+                    formHTML = `
+                        <div class="space-y-4">
+                            <div class="border-b pb-2 mb-2">
+                                <h4 class="font-medium text-gray-700">Vị trí</h4>
+                                <div class="mt-2">
+                                    <label class="block text-gray-700 mb-1">Địa chỉ</label>
+                                    <input type="text" id="editAllAddress" value="${farmData.location.address}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div class="mt-2">
+                                    <label class="block text-gray-700 mb-1">Tọa độ</label>
+                                    <input type="text" id="editAllCoordinates" value="${farmData.location.coordinates}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                            
+                            <div class="border-b pb-2 mb-2">
+                                <h4 class="font-medium text-gray-700">Khí hậu</h4>
+                                <div class="mt-2">
+                                    <label class="block text-gray-700 mb-1">Loại khí hậu</label>
+                                    <input type="text" id="editAllClimateType" value="${farmData.climate.type}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div class="mt-2">
+                                    <label class="block text-gray-700 mb-1">Nhiệt độ trung bình</label>
+                                    <input type="text" id="editAllTemperature" value="${farmData.climate.temperature}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div class="mt-2">
+                                    <label class="block text-gray-700 mb-1">Lượng mưa trung bình</label>
+                                    <input type="text" id="editAllRainfall" value="${farmData.climate.rainfall}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div class="mt-2">
+                                    <label class="block text-gray-700 mb-1">Số giờ nắng trung bình</label>
+                                    <input type="text" id="editAllSunshine" value="${farmData.climate.sunshine}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div class="mt-2">
+                                    <label class="block text-gray-700 mb-1">Mùa vụ chính</label>
+                                    <input type="text" id="editAllSeasons" value="${farmData.climate.seasons}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                            
+                            <div class="border-b pb-2 mb-2">
+                                <h4 class="font-medium text-gray-700">Đất đai</h4>
+                                <div class="mt-2">
+                                    <label class="block text-gray-700 mb-1">Loại đất chính</label>
+                                    <select id="editAllSoilType" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                        <option value="Đất phù sa" ${farmData.soil.type === 'Đất phù sa' ? 'selected' : ''}>Đất phù sa</option>
+                                        <option value="Đất feralit" ${farmData.soil.type === 'Đất feralit' ? 'selected' : ''}>Đất feralit</option>
+                                        <option value="Đất cát" ${farmData.soil.type === 'Đất cát' ? 'selected' : ''}>Đất cát</option>
+                                        <option value="Đất sét" ${farmData.soil.type === 'Đất sét' ? 'selected' : ''}>Đất sét</option>
+                                    </select>
+                                </div>
+                                <div class="mt-2">
+                                    <label class="block text-gray-700 mb-1">Độ pH</label>
+                                    <input type="text" id="editAllSoilPH" value="${farmData.soil.ph}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div class="mt-2">
+                                    <label class="block text-gray-700 mb-1">Thành phần đất</label>
+                                    <input type="text" id="editAllSoilComposition" value="${farmData.soil.composition}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-medium text-gray-700">Hạ tầng</h4>
+                                <div class="mt-2">
+                                    <label class="block text-gray-700 mb-1">Nguồn nước tưới</label>
+                                    <input type="text" id="editAllWaterSource" value="${farmData.infrastructure.water}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div class="mt-2">
+                                    <label class="block text-gray-700 mb-1">Hệ thống tưới</label>
+                                    <select id="editAllIrrigation" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                        <option value="Thủ công" ${farmData.infrastructure.irrigation === 'Thủ công' ? 'selected' : ''}>Thủ công</option>
+                                        <option value="Bán tự động" ${farmData.infrastructure.irrigation === 'Bán tự động' ? 'selected' : ''}>Bán tự động</option>
+                                        <option value="Tự động" ${farmData.infrastructure.irrigation === 'Tự động' ? 'selected' : ''}>Tự động</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            modalContent.innerHTML = formHTML;
+            editModal.classList.remove('hidden');
+        }
+
+        // Save data from modal
+        function saveData(section) {
+            switch(section) {
+                case 'Vị trí':
+                    farmData.location.address = document.getElementById('editAddress').value;
+                    farmData.location.coordinates = document.getElementById('editCoordinates').value;
+                    document.getElementById('farmAddress').textContent = farmData.location.address;
+                    document.getElementById('farmCoordinates').textContent = farmData.location.coordinates;
+                    break;
+                    
+                case 'Khí hậu':
+                    farmData.climate.type = document.getElementById('editClimateType').value;
+                    farmData.climate.temperature = document.getElementById('editTemperature').value;
+                    farmData.climate.rainfall = document.getElementById('editRainfall').value;
+                    farmData.climate.sunshine = document.getElementById('editSunshine').value;
+                    farmData.climate.seasons = document.getElementById('editSeasons').value;
+                    
+                    document.getElementById('climateType').textContent = farmData.climate.type;
+                    document.getElementById('avgTemperature').textContent = farmData.climate.temperature;
+                    document.getElementById('avgRainfall').textContent = farmData.climate.rainfall;
+                    document.getElementById('avgSunshine').textContent = farmData.climate.sunshine;
+                    document.getElementById('mainSeasons').textContent = farmData.climate.seasons;
+                    break;
+                    
+                case 'Đất đai':
+                    farmData.soil.type = document.getElementById('editSoilType').value;
+                    farmData.soil.ph = document.getElementById('editSoilPH').value;
+                    farmData.soil.composition = document.getElementById('editSoilComposition').value;
+                    
+                    document.getElementById('soilType').textContent = farmData.soil.type;
+                    document.getElementById('soilPH').textContent = farmData.soil.ph;
+                    document.getElementById('soilComposition').textContent = farmData.soil.composition;
+                    break;
+                    
+                case 'Hạ tầng':
+                    farmData.infrastructure.water = document.getElementById('editWaterSource').value;
+                    farmData.infrastructure.irrigation = document.getElementById('editIrrigation').value;
+                    
+                    document.getElementById('waterSource').textContent = farmData.infrastructure.water;
+                    document.getElementById('irrigationSystem').textContent = farmData.infrastructure.irrigation;
+                    break;
+                    
+                case 'Tất cả':
+                    // Location
+                    farmData.location.address = document.getElementById('editAllAddress').value;
+                    farmData.location.coordinates = document.getElementById('editAllCoordinates').value;
+                    document.getElementById('farmAddress').textContent = farmData.location.address;
+                    document.getElementById('farmCoordinates').textContent = farmData.location.coordinates;
+                    
+                    // Climate
+                    farmData.climate.type = document.getElementById('editAllClimateType').value;
+                    farmData.climate.temperature = document.getElementById('editAllTemperature').value;
+                    farmData.climate.rainfall = document.getElementById('editAllRainfall').value;
+                    farmData.climate.sunshine = document.getElementById('editAllSunshine').value;
+                    farmData.climate.seasons = document.getElementById('editAllSeasons').value;
+                    
+                    document.getElementById('climateType').textContent = farmData.climate.type;
+                    document.getElementById('avgTemperature').textContent = farmData.climate.temperature;
+                    document.getElementById('avgRainfall').textContent = farmData.climate.rainfall;
+                    document.getElementById('avgSunshine').textContent = farmData.climate.sunshine;
+                    document.getElementById('mainSeasons').textContent = farmData.climate.seasons;
+                    
+                    // Soil
+                    farmData.soil.type = document.getElementById('editAllSoilType').value;
+                    farmData.soil.ph = document.getElementById('editAllSoilPH').value;
+                    farmData.soil.composition = document.getElementById('editAllSoilComposition').value;
+                    
+                    document.getElementById('soilType').textContent = farmData.soil.type;
+                    document.getElementById('soilPH').textContent = farmData.soil.ph;
+                    document.getElementById('soilComposition').textContent = farmData.soil.composition;
+                    
+                    // Infrastructure
+                    farmData.infrastructure.water = document.getElementById('editAllWaterSource').value;
+                    farmData.infrastructure.irrigation = document.getElementById('editAllIrrigation').value;
+                    
+                    document.getElementById('waterSource').textContent = farmData.infrastructure.water;
+                    document.getElementById('irrigationSystem').textContent = farmData.infrastructure.irrigation;
+                    break;
+            }
+            
+            // Show success message
+            alert('Cập nhật thông tin thành công!');
+            editModal.classList.add('hidden');
+        }
+
+        // Event listeners
+        editAllBtn.addEventListener('click', () => openEditModal('Tất cả'));
+        editLocationBtn.addEventListener('click', () => openEditModal('Vị trí'));
+        editClimateBtn.addEventListener('click', () => openEditModal('Khí hậu'));
+        editSoilBtn.addEventListener('click', () => openEditModal('Đất đai'));
+        editInfraBtn.addEventListener('click', () => openEditModal('Hạ tầng'));
+        
+        closeModalBtn.addEventListener('click', () => editModal.classList.add('hidden'));
+        cancelEditBtn.addEventListener('click', () => editModal.classList.add('hidden'));
+        
+        saveEditBtn.addEventListener('click', () => {
+            const section = modalTitle.textContent.replace('Chỉnh sửa ', '');
+            saveData(section);
+        });
+
+        // Close modal when clicking outside
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                editModal.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

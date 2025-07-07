@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử Canh tác - Nhật ký Nông trại</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4CAF50',
+                        secondary: '#8BC34A',
+                        accent: '#FFC107',
+                        dark: '#388E3C',
+                        light: '#DCEDC8',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 23px;
+            top: 32px;
+            height: calc(100% - 32px);
+            width: 2px;
+            background-color: #8BC34A;
+        }
+        .crop-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+        }
+        .chart-container {
+            height: 300px;
+        }
+        @media (max-width: 640px) {
+            .season-card {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h1 class="text-3xl font-bold text-primary">Lịch sử Canh tác</h1>
+                <button class="bg-primary hover:bg-dark text-white px-4 py-2 rounded-lg flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Thêm vụ mùa
+                </button>
+            </div>
+            <p class="text-gray-600">Xem lại và học hỏi từ các vụ mùa trước để cải thiện hiệu quả canh tác</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Season List -->
+            <div class="w-full lg:w-1/3">
+                <div class="bg-white rounded-lg shadow-md p-4 sticky top-4">
+                    <h2 class="text-xl font-semibold text-dark mb-4">Danh sách vụ mùa</h2>
+                    <div class="space-y-4">
+                        <!-- Season Card 1 (Active) -->
+                        <div class="season-card bg-light border-l-4 border-primary p-4 rounded-lg flex flex-wrap cursor-pointer transition-all hover:shadow-md">
+                            <div class="flex items-center mb-2 sm:mb-0 sm:mr-4">
+                                <div class="crop-icon bg-primary mr-3">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold">Vụ Đông Xuân 2023-2024</h3>
+                                    <p class="text-sm text-gray-600">Lúa ST25</p>
+                                </div>
+                            </div>
+                            <div class="flex-1 sm:text-right">
+                                <p class="text-sm">01/11/2023 - 30/03/2024</p>
+                                <p class="text-primary font-medium">7 tấn/ha</p>
+                            </div>
+                        </div>
+
+                        <!-- Season Card 2 -->
+                        <div class="season-card bg-white border p-4 rounded-lg flex flex-wrap cursor-pointer transition-all hover:shadow-md">
+                            <div class="flex items-center mb-2 sm:mb-0 sm:mr-4">
+                                <div class="crop-icon bg-secondary mr-3">
+                                    <i class="fas fa-leaf"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold">Vụ Hè Thu 2023</h3>
+                                    <p class="text-sm text-gray-600">Rau cải xanh</p>
+                                </div>
+                            </div>
+                            <div class="flex-1 sm:text-right">
+                                <p class="text-sm">15/06/2023 - 30/09/2023</p>
+                                <p class="text-secondary font-medium">5.2 tấn/ha</p>
+                            </div>
+                        </div>
+
+                        <!-- Season Card 3 -->
+                        <div class="season-card bg-white border p-4 rounded-lg flex flex-wrap cursor-pointer transition-all hover:shadow-md">
+                            <div class="flex items-center mb-2 sm:mb-0 sm:mr-4">
+                                <div class="crop-icon bg-accent mr-3" style="background-color: #FF9800;">
+                                    <i class="fas fa-apple-alt"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold">Vụ Đông Xuân 2022-2023</h3>
+                                    <p class="text-sm text-gray-600">Lúa Jasmine</p>
+                                </div>
+                            </div>
+                            <div class="flex-1 sm:text-right">
+                                <p class="text-sm">05/11/2022 - 25/03/2023</p>
+                                <p class="font-medium" style="color: #FF9800;">6.5 tấn/ha</p>
+                            </div>
+                        </div>
+
+                        <!-- Season Card 4 -->
+                        <div class="season-card bg-white border p-4 rounded-lg flex flex-wrap cursor-pointer transition-all hover:shadow-md">
+                            <div class="flex items-center mb-2 sm:mb-0 sm:mr-4">
+                                <div class="crop-icon bg-purple-500 mr-3">
+                                    <i class="fas fa-pepper-hot"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold">Vụ Hè Thu 2022</h3>
+                                    <p class="text-sm text-gray-600">Ớt chuông</p>
+                                </div>
+                            </div>
+                            <div class="flex-1 sm:text-right">
+                                <p class="text-sm">10/06/2022 - 15/10/2022</p>
+                                <p class="font-medium text-purple-500">8 tấn/ha</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Season Details -->
+            <div class="w-full lg:w-2/3">
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <div class="flex flex-wrap justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-dark">Vụ Đông Xuân 2023-2024</h2>
+                            <p class="text-primary font-medium">Lúa ST25</p>
+                        </div>
+                        <div class="flex space-x-2 mt-2 sm:mt-0">
+                            <button class="bg-blue-100 text-blue-600 px-3 py-1 rounded-md text-sm flex items-center">
+                                <i class="fas fa-edit mr-1"></i> Chỉnh sửa
+                            </button>
+                            <button class="bg-red-100 text-red-600 px-3 py-1 rounded-md text-sm flex items-center">
+                                <i class="fas fa-trash-alt mr-1"></i> Xóa
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Basic Info -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="text-gray-500 text-sm">Thời gian</p>
+                            <p class="font-medium">01/11/2023 - 30/03/2024</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="text-gray-500 text-sm">Năng suất</p>
+                            <p class="font-medium text-primary">7 tấn/ha</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="text-gray-500 text-sm">Lợi nhuận</p>
+                            <p class="font-medium text-green-600">42,500,000 VNĐ</p>
+                        </div>
+                    </div>
+
+                    <!-- Financial Summary -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-dark flex items-center">
+                            <i class="fas fa-coins mr-2 text-accent"></i> Tổng kết tài chính
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <p class="text-blue-500 text-sm">Tổng chi phí</p>
+                                <p class="font-medium text-blue-700">27,500,000 VNĐ</p>
+                                <div class="mt-2 text-sm">
+                                    <p class="flex justify-between"><span>Phân bón:</span> <span>8,200,000 VNĐ</span></p>
+                                    <p class="flex justify-between"><span>Thuốc BVTV:</span> <span>5,300,000 VNĐ</span></p>
+                                    <p class="flex justify-between"><span>Giống:</span> <span>4,000,000 VNĐ</span></p>
+                                    <p class="flex justify-between"><span>Khác:</span> <span>10,000,000 VNĐ</span></p>
+                                </div>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <p class="text-green-500 text-sm">Tổng thu nhập</p>
+                                <p class="font-medium text-green-700">70,000,000 VNĐ</p>
+                                <div class="mt-2 text-sm">
+                                    <p class="flex justify-between"><span>Sản lượng:</span> <span>7 tấn</span></p>
+                                    <p class="flex justify-between"><span>Giá bán:</span> <span>10,000 VNĐ/kg</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activities Timeline -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-dark flex items-center">
+                            <i class="fas fa-tasks mr-2 text-secondary"></i> Hoạt động canh tác
+                        </h3>
+                        <div class="relative">
+                            <!-- Timeline Item 1 -->
+                            <div class="timeline-item relative pl-12 pb-6">
+                                <div class="absolute left-0 top-0 w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <h4 class="font-medium">Gieo hạt</h4>
+                                        <span class="text-sm text-gray-500">01/11/2023</span>
+                                    </div>
+                                    <p class="text-sm mt-1 text-gray-600">Gieo hạt giống lúa ST25 với mật độ 100kg/ha</p>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Item 2 -->
+                            <div class="timeline-item relative pl-12 pb-6">
+                                <div class="absolute left-0 top-0 w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white">
+                                    <i class="fas fa-tint"></i>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <h4 class="font-medium">Bón phân đợt 1</h4>
+                                        <span class="text-sm text-gray-500">15/11/2023</span>
+                                    </div>
+                                    <p class="text-sm mt-1 text-gray-600">Bón phân NPK 20-20-15 với lượng 200kg/ha</p>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Item 3 -->
+                            <div class="timeline-item relative pl-12 pb-6">
+                                <div class="absolute left-0 top-0 w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white">
+                                    <i class="fas fa-bug"></i>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <h4 class="font-medium">Phát hiện sâu bệnh</h4>
+                                        <span class="text-sm text-gray-500">20/12/2023</span>
+                                    </div>
+                                    <p class="text-sm mt-1 text-gray-600">Sâu cuốn lá xuất hiện với mật độ trung bình</p>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Item 4 -->
+                            <div class="timeline-item relative pl-12 pb-6">
+                                <div class="absolute left-0 top-0 w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white">
+                                    <i class="fas fa-spray-can"></i>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <h4 class="font-medium">Xử lý sâu bệnh</h4>
+                                        <span class="text-sm text-gray-500">22/12/2023</span>
+                                    </div>
+                                    <p class="text-sm mt-1 text-gray-600">Phun thuốc trừ sâu sinh học với liều lượng 1 lít/ha</p>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Item 5 -->
+                            <div class="timeline-item relative pl-12">
+                                <div class="absolute left-0 top-0 w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white">
+                                    <i class="fas fa-cloud-sun"></i>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-start">
+                                        <h4 class="font-medium">Thu hoạch</h4>
+                                        <span class="text-sm text-gray-500">30/03/2024</span>
+                                    </div>
+                                    <p class="text-sm mt-1 text-gray-600">Thu hoạch toàn bộ diện tích, năng suất đạt 7 tấn/ha</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weather Notes -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-dark flex items-center">
+                            <i class="fas fa-cloud-rain mr-2 text-blue-400"></i> Thời tiết trong vụ
+                        </h3>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-700">Vụ này có đợt hạn kéo dài 2 tuần vào tháng 2, nhiệt độ cao nhất lên đến 38°C. Lượng mưa cả vụ thấp hơn trung bình nhiều năm khoảng 20%.</p>
+                        </div>
+                    </div>
+
+                    <!-- Experience Notes -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold mb-4 text-dark flex items-center">
+                            <i class="fas fa-book mr-2 text-purple-500"></i> Kinh nghiệm & Ghi chú
+                        </h3>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-700">Vụ này gặp nhiều sâu cuốn lá hơn các vụ trước, cần chủ động phòng ngừa sớm hơn. Nên thử nghiệm giống kháng sâu cho vụ tới. Đợt hạn tháng 2 ảnh hưởng đến sinh trưởng, cần có biện pháp tưới tiết kiệm hiệu quả hơn.</p>
+                        </div>
+                    </div>
+
+                    <!-- Comparison Chart -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 text-dark flex items-center">
+                            <i class="fas fa-chart-line mr-2 text-orange-500"></i> So sánh với các vụ trước
+                        </h3>
+                        <div class="bg-white border rounded-lg p-4 chart-container">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize chart when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            const comparisonChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Vụ ĐX 2022-2023', 'Vụ HT 2023', 'Vụ ĐX 2023-2024'],
+                    datasets: [
+                        {
+                            label: 'Năng suất (tấn/ha)',
+                            data: [6.5, 5.2, 7],
+                            backgroundColor: '#4CAF50',
+                            borderColor: '#388E3C',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Chi phí (triệu VNĐ/ha)',
+                            data: [25, 18, 27.5],
+                            backgroundColor: '#FF9800',
+                            borderColor: '#F57C00',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.datasetIndex === 1) {
+                                        label += context.raw.toLocaleString() + ' triệu VNĐ';
+                                    } else {
+                                        label += context.raw + ' tấn/ha';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // Add click event to season cards
+        const seasonCards = document.querySelectorAll('.season-card');
+        seasonCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                seasonCards.forEach(c => {
+                    c.classList.remove('bg-light', 'border-l-4', 'border-primary');
+                    c.classList.add('bg-white', 'border');
+                });
+                
+                // Add active class to clicked card
+                this.classList.remove('bg-white', 'border');
+                this.classList.add('bg-light', 'border-l-4', 'border-primary');
+                
+                // In a real app, you would load the corresponding season data here
+                // For this demo, we're just simulating the active state
+            });
+        });
+    </script>
+</body>
+</html>

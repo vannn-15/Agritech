@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch trình Canh tác của tôi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 1.25rem;
+            top: 2.5rem;
+            height: calc(100% - 2.5rem);
+            width: 2px;
+            background-color: #e5e7eb;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -0.5rem;
+            right: -0.5rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            background-color: #ef4444;
+            color: white;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-8">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold text-green-800">Lịch trình Canh tác của tôi</h1>
+                <div class="relative">
+                    <button id="notificationBtn" class="p-2 rounded-full hover:bg-gray-200 transition">
+                        <i class="fas fa-bell text-xl text-gray-700"></i>
+                        <span id="notificationCount" class="notification-badge hidden">3</span>
+                    </button>
+                    <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                        <div class="p-2 border-b border-gray-200 bg-green-50">
+                            <h3 class="font-semibold text-green-800">Thông báo mới</h3>
+                        </div>
+                        <div class="max-h-60 overflow-y-auto">
+                            <div class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer">
+                                <p class="text-sm font-medium">Ngày mai: Bón phân đợt 2 cho Lúa ST25</p>
+                                <p class="text-xs text-gray-500">Khu B - 07/07/2023</p>
+                            </div>
+                            <div class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer">
+                                <p class="text-sm font-medium">Cảnh báo: Nhện đỏ xuất hiện trên cây ăn quả</p>
+                                <p class="text-xs text-gray-500">15/07/2023</p>
+                            </div>
+                            <div class="p-3 hover:bg-gray-50 cursor-pointer">
+                                <p class="text-sm font-medium">Thu hoạch Lúa ST25 từ 25/07 - 05/08</p>
+                                <p class="text-xs text-gray-500">Khu B</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-gray-600 mt-2">Theo dõi lịch trình và nhận cảnh báo cho các sự kiện quan trọng</p>
+        </header>
+
+        <!-- Current Crops Section -->
+        <section class="mb-10">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-green-700">Cây trồng hiện tại</h2>
+                <button id="addCropBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center transition">
+                    <i class="fas fa-plus mr-2"></i> Thêm cây trồng mới
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Crop Card 1 -->
+                <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500">
+                    <div class="flex justify-between">
+                        <h3 class="font-bold text-lg">Lúa ST25</h3>
+                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Đang phát triển</span>
+                    </div>
+                    <p class="text-gray-600 text-sm mt-1">Khu B - 2ha</p>
+                    <div class="mt-3 flex items-center text-sm">
+                        <i class="fas fa-calendar-day text-green-600 mr-2"></i>
+                        <span>Trồng ngày: 15/05/2023</span>
+                    </div>
+                    <div class="mt-2 flex items-center text-sm">
+                        <i class="fas fa-hourglass-half text-green-600 mr-2"></i>
+                        <span>Thu hoạch dự kiến: 25/07 - 05/08</span>
+                    </div>
+                    <button class="mt-3 text-green-600 hover:text-green-800 text-sm font-medium flex items-center">
+                        <i class="fas fa-edit mr-1"></i> Cập nhật tiến độ
+                    </button>
+                </div>
+                
+                <!-- Crop Card 2 -->
+                <div class="bg-white rounded-lg shadow p-4 border-l-4 border-yellow-500">
+                    <div class="flex justify-between">
+                        <h3 class="font-bold text-lg">Cây ăn quả</h3>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">Cần chăm sóc</span>
+                    </div>
+                    <p class="text-gray-600 text-sm mt-1">Khu A - 50 cây</p>
+                    <div class="mt-3 flex items-center text-sm">
+                        <i class="fas fa-calendar-day text-green-600 mr-2"></i>
+                        <span>Trồng ngày: 10/03/2023</span>
+                    </div>
+                    <div class="mt-2 flex items-center text-sm">
+                        <i class="fas fa-hourglass-half text-green-600 mr-2"></i>
+                        <span>Thu hoạch dự kiến: 15/09 - 30/09</span>
+                    </div>
+                    <button class="mt-3 text-green-600 hover:text-green-800 text-sm font-medium flex items-center">
+                        <i class="fas fa-edit mr-1"></i> Cập nhật tiến độ
+                    </button>
+                </div>
+                
+                <!-- Crop Card 3 -->
+                <div class="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500">
+                    <div class="flex justify-between">
+                        <h3 class="font-bold text-lg">Rau màu</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Mới trồng</span>
+                    </div>
+                    <p class="text-gray-600 text-sm mt-1">Khu C - 0.5ha</p>
+                    <div class="mt-3 flex items-center text-sm">
+                        <i class="fas fa-calendar-day text-green-600 mr-2"></i>
+                        <span>Trồng ngày: 25/06/2023</span>
+                    </div>
+                    <div class="mt-2 flex items-center text-sm">
+                        <i class="fas fa-hourglass-half text-green-600 mr-2"></i>
+                        <span>Thu hoạch dự kiến: 10/08 - 20/08</span>
+                    </div>
+                    <button class="mt-3 text-green-600 hover:text-green-800 text-sm font-medium flex items-center">
+                        <i class="fas fa-edit mr-1"></i> Cập nhật tiến độ
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section class="mb-10">
+            <h2 class="text-xl font-semibold text-green-700 mb-4">Lịch trình canh tác</h2>
+            
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="space-y-4">
+                    <!-- Timeline Item 1 (Urgent) -->
+                    <div class="timeline-item relative pl-10">
+                        <div class="flex items-start">
+                            <div class="absolute left-0 flex items-center justify-center w-10 h-10 rounded-full bg-red-100 text-red-600">
+                                <i class="fas fa-exclamation"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-medium text-red-600 animate-pulse">07/07: Bón phân đợt 2 cho Lúa ST25</h3>
+                                        <p class="text-sm text-gray-600">Khu B - Ưu tiên cao</p>
+                                    </div>
+                                    <button class="ml-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition">
+                                        Đánh dấu hoàn thành
+                                    </button>
+                                </div>
+                                <div class="mt-2 text-sm text-gray-700">
+                                    <p>Bón phân NPK 20-20-15 với liều lượng 20kg/1000m². Kiểm tra độ ẩm đất trước khi bón.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Timeline Item 2 (Warning) -->
+                    <div class="timeline-item relative pl-10">
+                        <div class="flex items-start">
+                            <div class="absolute left-0 flex items-center justify-center w-10 h-10 rounded-full bg-yellow-100 text-yellow-600">
+                                <i class="fas fa-bug"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-medium text-yellow-600">15/07: Cảnh báo sâu bệnh sớm (nhện đỏ)</h3>
+                                        <p class="text-sm text-gray-600">Cây ăn quả - Cần theo dõi</p>
+                                    </div>
+                                    <button class="ml-2 px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition">
+                                        Đánh dấu hoàn thành
+                                    </button>
+                                </div>
+                                <div class="mt-2 text-sm text-gray-700">
+                                    <p>Nhện đỏ thường xuất hiện vào mùa khô. Kiểm tra mặt dưới lá, nếu phát hiện dùng thuốc đặc trị hoặc phun nước áp lực cao.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Timeline Item 3 (Info) -->
+                    <div class="timeline-item relative pl-10">
+                        <div class="flex items-start">
+                            <div class="absolute left-0 flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-medium text-blue-600">25/07 - 05/08: Thu hoạch Lúa ST25</h3>
+                                        <p class="text-sm text-gray-600">Khu B - Chuẩn bị dụng cụ</p>
+                                    </div>
+                                    <button class="ml-2 px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition">
+                                        Đánh dấu hoàn thành
+                                    </button>
+                                </div>
+                                <div class="mt-2 text-sm text-gray-700">
+                                    <p>Kiểm tra độ chín của lúa trước khi thu hoạch. Chuẩn bị máy gặt đập liên hợp hoặc nhân công. Dự trữ bao bì, kho bảo quản.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Timeline Item 4 (Completed) -->
+                    <div class="timeline-item relative pl-10">
+                        <div class="flex items-start">
+                            <div class="absolute left-0 flex items-center justify-center w-10 h-10 rounded-full bg-green-100 text-green-600">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="flex-1 opacity-70">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-medium text-gray-600 line-through">20/06: Bón phân đợt 1 cho Lúa ST25</h3>
+                                        <p class="text-sm text-gray-500">Khu B - Đã hoàn thành</p>
+                                    </div>
+                                    <span class="ml-2 px-3 py-1 bg-green-100 text-green-800 text-sm rounded">
+                                        <i class="fas fa-check mr-1"></i> Hoàn thành
+                                    </span>
+                                </div>
+                                <div class="mt-2 text-sm text-gray-500">
+                                    <p>Đã bón phân đợt 1 với liều lượng 15kg/1000m². Cây lúa phát triển tốt, màu xanh đậm.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Crop Modal (Hidden by default) -->
+        <div id="addCropModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+                <div class="p-4 border-b border-gray-200 bg-green-50 rounded-t-lg">
+                    <h3 class="text-lg font-semibold text-green-800">Thêm cây trồng mới</h3>
+                </div>
+                <div class="p-6">
+                    <form>
+                        <div class="mb-4">
+                            <label for="cropName" class="block text-sm font-medium text-gray-700 mb-1">Tên cây trồng</label>
+                            <input type="text" id="cropName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="plantingDate" class="block text-sm font-medium text-gray-700 mb-1">Ngày trồng</label>
+                            <input type="date" id="plantingDate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="harvestDate" class="block text-sm font-medium text-gray-700 mb-1">Ngày thu hoạch dự kiến</label>
+                            <input type="date" id="harvestDate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Khu vực</label>
+                            <input type="text" id="location" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="area" class="block text-sm font-medium text-gray-700 mb-1">Diện tích/Số lượng</label>
+                            <input type="text" id="area" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                    </form>
+                </div>
+                <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <button id="cancelAddCrop" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-md transition">
+                        Hủy bỏ
+                    </button>
+                    <button id="confirmAddCrop" class="px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition">
+                        Thêm cây trồng
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Toast (Hidden by default) -->
+        <div id="alertToast" class="fixed bottom-4 right-4 hidden">
+            <div class="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center">
+                <i class="fas fa-check-circle mr-2"></i>
+                <span id="toastMessage">Sự kiện đã được đánh dấu hoàn thành!</span>
+                <button id="closeToast" class="ml-4">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Notification dropdown toggle
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const notificationCount = document.getElementById('notificationCount');
+        
+        // Show notification count if there are notifications
+        notificationCount.classList.remove('hidden');
+        
+        notificationBtn.addEventListener('click', () => {
+            notificationDropdown.classList.toggle('hidden');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!notificationBtn.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                notificationDropdown.classList.add('hidden');
+            }
+        });
+        
+        // Add Crop Modal
+        const addCropBtn = document.getElementById('addCropBtn');
+        const addCropModal = document.getElementById('addCropModal');
+        const cancelAddCrop = document.getElementById('cancelAddCrop');
+        const confirmAddCrop = document.getElementById('confirmAddCrop');
+        
+        addCropBtn.addEventListener('click', () => {
+            addCropModal.classList.remove('hidden');
+        });
+        
+        cancelAddCrop.addEventListener('click', () => {
+            addCropModal.classList.add('hidden');
+        });
+        
+        confirmAddCrop.addEventListener('click', () => {
+            // Here you would normally save the data
+            addCropModal.classList.add('hidden');
+            showToast('Cây trồng mới đã được thêm vào hệ thống!');
+        });
+        
+        // Close modal when clicking outside
+        addCropModal.addEventListener('click', (e) => {
+            if (e.target === addCropModal) {
+                addCropModal.classList.add('hidden');
+            }
+        });
+        
+        // Toast notification
+        const alertToast = document.getElementById('alertToast');
+        const toastMessage = document.getElementById('toastMessage');
+        const closeToast = document.getElementById('closeToast');
+        
+        function showToast(message) {
+            toastMessage.textContent = message;
+            alertToast.classList.remove('hidden');
+            setTimeout(() => {
+                alertToast.classList.add('hidden');
+            }, 5000);
+        }
+        
+        closeToast.addEventListener('click', () => {
+            alertToast.classList.add('hidden');
+        });
+        
+        // Mark as complete buttons
+        const completeButtons = document.querySelectorAll('.timeline-item button');
+        completeButtons.forEach(button => {
+            if (!button.innerHTML.includes('Hoàn thành')) {
+                button.addEventListener('click', () => {
+                    const item = button.closest('.timeline-item');
+                    item.querySelector('h3').classList.remove('animate-pulse', 'text-red-600', 'text-yellow-600', 'text-blue-600');
+                    item.querySelector('h3').classList.add('text-gray-600', 'line-through');
+                    item.querySelector('p').classList.add('text-gray-500');
+                    item.querySelector('.text-gray-700').classList.add('text-gray-500');
+                    
+                    const iconDiv = item.querySelector('.absolute div');
+                    iconDiv.className = 'absolute left-0 flex items-center justify-center w-10 h-10 rounded-full bg-green-100 text-green-600';
+                    iconDiv.innerHTML = '<i class="fas fa-check"></i>';
+                    
+                    button.innerHTML = '<i class="fas fa-check mr-1"></i> Hoàn thành';
+                    button.className = 'ml-2 px-3 py-1 bg-green-100 text-green-800 text-sm rounded';
+                    
+                    showToast('Sự kiện đã được đánh dấu hoàn thành!');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

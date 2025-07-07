@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sàn Nông sản Sạch - AgriTech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .certification-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        .qr-modal {
+            transition: all 0.3s ease;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Header -->
+    <header class="bg-green-700 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+                <i class="fas fa-leaf text-3xl mr-3"></i>
+                <h1 class="text-2xl font-bold">Sàn Nông sản Sạch AgriTech</h1>
+            </div>
+            <div class="relative w-full md:w-1/3">
+                <input type="text" placeholder="Tìm kiếm nông sản..." class="w-full py-2 px-4 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <button class="absolute right-0 top-0 h-full px-4 text-gray-600">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <nav class="flex items-center space-x-6 mt-4 md:mt-0">
+                <a href="#" class="hover:text-green-200"><i class="fas fa-home mr-1"></i> Trang chủ</a>
+                <a href="#" class="hover:text-green-200"><i class="fas fa-shopping-cart mr-1"></i> Giỏ hàng</a>
+                <a href="#" id="seller-btn" class="bg-yellow-500 hover:bg-yellow-600 text-gray-800 font-semibold py-2 px-4 rounded-lg transition"><i class="fas fa-store mr-1"></i> Đăng bán</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Categories -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Danh mục sản phẩm</h2>
+            <div class="flex flex-wrap gap-4">
+                <button class="category-btn active bg-green-600 text-white px-6 py-2 rounded-full shadow hover:bg-green-700 transition" data-category="all">Tất cả</button>
+                <button class="category-btn bg-green-100 text-green-800 px-6 py-2 rounded-full shadow hover:bg-green-200 transition" data-category="vegetable"><i class="fas fa-carrot mr-2"></i>Rau</button>
+                <button class="category-btn bg-green-100 text-green-800 px-6 py-2 rounded-full shadow hover:bg-green-200 transition" data-category="tuber"><i class="fas fa-seedling mr-2"></i>Củ</button>
+                <button class="category-btn bg-green-100 text-green-800 px-6 py-2 rounded-full shadow hover:bg-green-200 transition" data-category="fruit"><i class="fas fa-apple-alt mr-2"></i>Quả</button>
+            </div>
+        </div>
+
+        <!-- Standards Filter -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Tiêu chuẩn chất lượng</h2>
+            <div class="flex flex-wrap gap-4">
+                <button class="standard-btn active bg-blue-600 text-white px-6 py-2 rounded-full shadow hover:bg-blue-700 transition" data-standard="all">Tất cả</button>
+                <button class="standard-btn bg-blue-100 text-blue-800 px-6 py-2 rounded-full shadow hover:bg-blue-200 transition" data-standard="vietgap"><i class="fas fa-award mr-2"></i>VietGAP</button>
+                <button class="standard-btn bg-blue-100 text-blue-800 px-6 py-2 rounded-full shadow hover:bg-blue-200 transition" data-standard="organic"><i class="fas fa-recycle mr-2"></i>Hữu cơ</button>
+                <button class="standard-btn bg-blue-100 text-blue-800 px-6 py-2 rounded-full shadow hover:bg-blue-200 transition" data-standard="globalgap"><i class="fas fa-globe mr-2"></i>GlobalGAP</button>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Sản phẩm nổi bật</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Product 1 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300" data-category="fruit" data-standard="vietgap">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Táo" class="w-full h-48 object-cover">
+                        <div class="certification-badge bg-green-600" title="VietGAP">
+                            <i class="fas fa-award"></i>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2 text-gray-800">Táo đỏ Mộc Châu</h3>
+                        <p class="text-gray-600 mb-2">Nông trại Hoa Lâm</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-green-700">45,000đ/kg</span>
+                            <button class="view-detail-btn bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded-full text-sm transition" data-product="1">Xem chi tiết</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300" data-category="vegetable" data-standard="organic">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80" alt="Rau cải ngọt" class="w-full h-48 object-cover">
+                        <div class="certification-badge bg-yellow-600" title="Hữu cơ">
+                            <i class="fas fa-recycle"></i>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2 text-gray-800">Rau cải ngọt hữu cơ</h3>
+                        <p class="text-gray-600 mb-2">HTX Rau sạch Đà Lạt</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-green-700">25,000đ/kg</span>
+                            <button class="view-detail-btn bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded-full text-sm transition" data-product="2">Xem chi tiết</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300" data-category="tuber" data-standard="vietgap">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Khoai tây" class="w-full h-48 object-cover">
+                        <div class="certification-badge bg-green-600" title="VietGAP">
+                            <i class="fas fa-award"></i>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2 text-gray-800">Khoai tây Đà Lạt</h3>
+                        <p class="text-gray-600 mb-2">Nông trại Thanh Hà</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-green-700">30,000đ/kg</span>
+                            <button class="view-detail-btn bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded-full text-sm transition" data-product="3">Xem chi tiết</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300" data-category="fruit" data-standard="globalgap">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80" alt="Xoài cát Hòa Lộc" class="w-full h-48 object-cover">
+                        <div class="certification-badge bg-blue-600" title="GlobalGAP">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2 text-gray-800">Xoài cát Hòa Lộc</h3>
+                        <p class="text-gray-600 mb-2">Vườn xoài Tiền Giang</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-green-700">55,000đ/kg</span>
+                            <button class="view-detail-btn bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded-full text-sm transition" data-product="4">Xem chi tiết</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg max-w-4xl w-full max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-2xl font-bold text-gray-800" id="modal-product-name">Táo đỏ Mộc Châu</h2>
+                    <button id="close-modal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <img id="modal-product-image" src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Product" class="w-full rounded-lg">
+                        
+                        <div class="mt-4 bg-gray-100 p-4 rounded-lg">
+                            <h3 class="font-bold text-lg mb-2 text-gray-800">Thông tin nông trại</h3>
+                            <p id="modal-farm-name" class="text-gray-700 mb-1">Nông trại Hoa Lâm</p>
+                            <p id="modal-farm-location" class="text-gray-600 text-sm">Mộc Châu, Sơn La</p>
+                            <div class="flex items-center mt-2">
+                                <i class="fas fa-phone-alt text-green-600 mr-2"></i>
+                                <span class="text-gray-700">0987.654.321</span>
+                            </div>
+                            <div class="flex items-center mt-1">
+                                <i class="fas fa-envelope text-green-600 mr-2"></i>
+                                <span class="text-gray-700">hoalamfarm@gmail.com</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="mb-4">
+                            <p id="modal-product-description" class="text-gray-700 mb-4">Táo đỏ Mộc Châu được trồng theo tiêu chuẩn VietGAP, không sử dụng chất bảo quản, màu sắc tự nhiên, vị ngọt thanh, giòn và nhiều nước. Thu hoạch khi chín tự nhiên, đảm bảo chất lượng tốt nhất.</p>
+                            
+                            <div class="flex items-center mb-2">
+                                <span class="font-bold text-gray-700 mr-4">Giá:</span>
+                                <span id="modal-product-price" class="text-2xl font-bold text-green-600">45,000đ/kg</span>
+                            </div>
+                            
+                            <div class="flex items-center mb-4">
+                                <span class="font-bold text-gray-700 mr-4">Số lượng:</span>
+                                <div class="flex items-center">
+                                    <button class="quantity-btn bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-l">-</button>
+                                    <input type="number" value="1" min="1" class="w-12 h-8 text-center border-t border-b border-gray-300">
+                                    <button class="quantity-btn bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-r">+</button>
+                                    <span class="ml-2 text-gray-600">kg</span>
+                                </div>
+                            </div>
+                            
+                            <button class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold transition flex items-center justify-center">
+                                <i class="fas fa-cart-plus mr-2"></i> Thêm vào giỏ hàng
+                            </button>
+                        </div>
+
+                        <div class="border-t pt-4">
+                            <h3 class="font-bold text-lg mb-3 text-gray-800">Truy xuất nguồn gốc</h3>
+                            <div class="flex flex-col md:flex-row items-center">
+                                <div class="mb-4 md:mb-0 md:mr-6">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://agritech.vn/product/1" alt="QR Code" class="w-32 h-32 border border-gray-300 p-2 rounded">
+                                </div>
+                                <div>
+                                    <p class="text-gray-700 mb-3">Quét mã QR để xem chi tiết nguồn gốc sản phẩm</p>
+                                    <button id="scan-qr-btn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition">
+                                        <i class="fas fa-qrcode mr-2"></i> Quét QR truy xuất
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="mt-6">
+                    <div class="flex border-b">
+                        <button class="tab-btn active py-2 px-4 font-medium text-green-600 border-b-2 border-green-600" data-tab="certification">Chứng nhận</button>
+                        <button class="tab-btn py-2 px-4 font-medium text-gray-500 hover:text-green-600" data-tab="process">Quy trình</button>
+                        <button class="tab-btn py-2 px-4 font-medium text-gray-500 hover:text-green-600" data-tab="reviews">Đánh giá</button>
+                    </div>
+
+                    <div class="py-4">
+                        <!-- Certification Tab -->
+                        <div id="certification" class="tab-content active">
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-award text-2xl text-green-600 mr-3"></i>
+                                    <h4 class="font-bold text-lg text-gray-800">Chứng nhận VietGAP</h4>
+                                </div>
+                                <p class="text-gray-700 mb-4">Sản phẩm đạt chứng nhận VietGAP (Vietnamese Good Agricultural Practices) - Tiêu chuẩn thực hành sản xuất nông nghiệp tốt tại Việt Nam.</p>
+                                <p class="text-gray-700 mb-2"><span class="font-semibold">Mã chứng nhận:</span> VGAP-2023-123456</p>
+                                <p class="text-gray-700 mb-2"><span class="font-semibold">Ngày cấp:</span> 15/03/2023</p>
+                                <p class="text-gray-700 mb-2"><span class="font-semibold">Cơ quan cấp:</span> Cục Trồng trọt - Bộ NN&PTNT</p>
+                                <a href="#" class="text-green-600 hover:underline">Xem chi tiết chứng nhận</a>
+                            </div>
+                        </div>
+
+                        <!-- Process Tab -->
+                        <div id="process" class="tab-content">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-blue-50 p-4 rounded-lg">
+                                    <h4 class="font-bold text-lg text-gray-800 mb-3">Quy trình sản xuất</h4>
+                                    <ul class="space-y-3">
+                                        <li class="flex items-start">
+                                            <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">1</span>
+                                            <span class="text-gray-700">Ngày gieo hạt: 15/01/2023</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">2</span>
+                                            <span class="text-gray-700">Ngày bón phân đợt 1: 20/02/2023 (Phân hữu cơ vi sinh)</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">3</span>
+                                            <span class="text-gray-700">Ngày phun thuốc BVTV: 10/03/2023 (Thuốc sinh học)</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">4</span>
+                                            <span class="text-gray-700">Ngày thu hoạch: 05/06/2023</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg text-gray-800 mb-3">Hình ảnh quy trình</h4>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <img src="https://images.unsplash.com/photo-1594282486555-1a6ae6ad56ed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Farm" class="w-full h-32 object-cover rounded">
+                                        <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Harvest" class="w-full h-32 object-cover rounded">
+                                        <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Packing" class="w-full h-32 object-cover rounded">
+                                        <img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Product" class="w-full h-32 object-cover rounded">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reviews Tab -->
+                        <div id="reviews" class="tab-content">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-bold text-lg text-gray-800 mb-3">Đánh giá sản phẩm</h4>
+                                <div class="flex items-center mb-4">
+                                    <div class="flex items-center mr-4">
+                                        <span class="text-2xl font-bold text-gray-800 mr-1">4.8</span>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                    </div>
+                                    <div class="flex">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star-half-alt text-yellow-400"></i>
+                                        <span class="text-gray-600 ml-2">(24 đánh giá)</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-4">
+                                    <!-- Review 1 -->
+                                    <div class="border-b pb-4">
+                                        <div class="flex justify-between mb-2">
+                                            <span class="font-semibold">Nguyễn Thị Hà</span>
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                        </div>
+                                        <p class="text-gray-700 mb-2">Táo rất ngon, ngọt và giòn. Đóng gói cẩn thận, giao hàng nhanh. Sẽ ủng hộ nông trại tiếp!</p>
+                                        <span class="text-gray-500 text-sm">20/06/2023</span>
+                                    </div>
+                                    
+                                    <!-- Review 2 -->
+                                    <div class="border-b pb-4">
+                                        <div class="flex justify-between mb-2">
+                                            <span class="font-semibold">Trần Văn Nam</span>
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            </div>
+                                        </div>
+                                        <p class="text-gray-700 mb-2">Chất lượng tốt, nhưng giá hơi cao so với thị trường. Tuy nhiên yên tâm về nguồn gốc.</p>
+                                        <span class="text-gray-500 text-sm">15/06/2023</span>
+                                    </div>
+                                </div>
+                                
+                                <button class="mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition">
+                                    <i class="fas fa-pen mr-2"></i> Viết đánh giá
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Traceability Modal -->
+    <div id="qr-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Truy xuất nguồn gốc sản phẩm</h2>
+                <button id="close-qr-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <div class="text-center mb-6">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://agritech.vn/product/1/trace" alt="QR Code" class="mx-auto w-40 h-40 mb-4">
+                <p class="text-gray-600">Mã truy xuất: <span class="font-semibold">AGRI-TX-2023-123456</span></p>
+            </div>
+            
+            <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                <h3 class="font-bold text-lg mb-3 text-gray-800">Thông tin sản phẩm</h3>
+                <p class="text-gray-700 mb-1"><span class="font-semibold">Tên sản phẩm:</span> Táo đỏ Mộc Châu</p>
+                <p class="text-gray-700 mb-1"><span class="font-semibold">Nông trại:</span> Hoa Lâm</p>
+                <p class="text-gray-700 mb-1"><span class="font-semibold">Địa điểm canh tác:</span> Mộc Châu, Sơn La</p>
+                <p class="text-gray-700 mb-1"><span class="font-semibold">Diện tích:</span> 2ha</p>
+                <p class="text-gray-700"><span class="font-semibold">Tiêu chuẩn:</span> VietGAP</p>
+            </div>
+            
+            <div class="bg-green-50 p-4 rounded-lg mb-4">
+                <h3 class="font-bold text-lg mb-3 text-gray-800">Lịch sử canh tác</h3>
+                <ul class="space-y-3">
+                    <li class="flex">
+                        <div class="bg-green-100 text-green-800 rounded-full w-8 h-8 flex items-center justify-center mr-3 flex-shrink-0">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Gieo trồng</p>
+                            <p class="text-gray-600 text-sm">15/01/2023 - Giống táo đỏ Mỹ</p>
+                        </div>
+                    </li>
+                    <li class="flex">
+                        <div class="bg-green-100 text-green-800 rounded-full w-8 h-8 flex items-center justify-center mr-3 flex-shrink-0">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Bón phân đợt 1</p>
+                            <p class="text-gray-600 text-sm">20/02/2023 - Phân hữu cơ vi sinh</p>
+                        </div>
+                    </li>
+                    <li class="flex">
+                        <div class="bg-green-100 text-green-800 rounded-full w-8 h-8 flex items-center justify-center mr-3 flex-shrink-0">
+                            <i class="fas fa-spray-can"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Phun thuốc BVTV</p>
+                            <p class="text-gray-600 text-sm">10/03/2023 - Thuốc sinh học</p>
+                        </div>
+                    </li>
+                    <li class="flex">
+                        <div class="bg-green-100 text-green-800 rounded-full w-8 h-8 flex items-center justify-center mr-3 flex-shrink-0">
+                            <i class="fas fa-harvest"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Thu hoạch</p>
+                            <p class="text-gray-600 text-sm">05/06/2023 - 2.5 tấn</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="bg-blue-50 p-4 rounded-lg">
+                <h3 class="font-bold text-lg mb-2 text-gray-800">Chứng nhận VietGAP</h3>
+                <p class="text-gray-700 mb-3">VietGAP là tiêu chuẩn thực hành sản xuất nông nghiệp tốt tại Việt Nam, đảm bảo an toàn thực phẩm, bền vững về môi trường và trách nhiệm xã hội.</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600 text-sm">Mã chứng nhận: VGAP-2023-123456</span>
+                    <a href="#" class="text-blue-600 hover:underline text-sm">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seller Form Modal -->
+    <div id="seller-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg max-w-2xl w-full p-6 max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Đăng bán sản phẩm</h2>
+                <button id="close-seller-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <form id="seller-form" class="space-y-4">
+                <div>
+                    <label for="product-name" class="block text-gray-700 font-medium mb-1">Tên sản phẩm</label>
+                    <input type="text" id="product-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Ví dụ: Táo đỏ Mộc Châu">
+                </div>
+                
+                <div>
+                    <label for="product-category" class="block text-gray-700 font-medium mb-1">Danh mục</label>
+                    <select id="product-category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        <option value="">Chọn danh mục</option>
+                        <option value="vegetable">Rau</option>
+                        <option value="tuber">Củ</option>
+                        <option value="fruit">Quả</option>
+                        <option value="other">Khác</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="product-description" class="block text-gray-700 font-medium mb-1">Mô tả sản phẩm</label>
+                    <textarea id="product-description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Mô tả chi tiết về sản phẩm"></textarea>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="product-price" class="block text-gray-700 font-medium mb-1">Giá bán (đồng/kg)</label>
+                        <input type="number" id="product-price" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Ví dụ: 45000">
+                    </div>
+                    <div>
+                        <label for="product-quantity" class="block text-gray-700 font-medium mb-1">Số lượng (kg)</label>
+                        <input type="number" id="product-quantity" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Ví dụ: 100">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">Hình ảnh sản phẩm</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-500 mb-2">Kéo thả hình ảnh vào đây hoặc nhấn để chọn</p>
+                        <button type="button" class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-lg transition">
+                            Chọn hình ảnh
+                        </button>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">Tiêu chuẩn chất lượng</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded text-green-600 focus:ring-green-500">
+                            <span class="ml-2 text-gray-700">VietGAP</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded text-green-600 focus:ring-green-500">
+                            <span class="ml-2 text-gray-700">Hữu cơ</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded text-green-600 focus:ring-green-500">
+                            <span class="ml-2 text-gray-700">GlobalGAP</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded text-green-600 focus:ring-green-500">
+                            <span class="ml-2 text-gray-700">Khác</span>
+                            <input type="text" class="ml-2 px-2 py-1 border border-gray-300 rounded text-sm w-40" placeholder="Ghi rõ tiêu chuẩn">
+                        </label>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="farm-info" class="block text-gray-700 font-medium mb-1">Thông tin nông trại/HTX</label>
+                    <textarea id="farm-info" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Tên nông trại, địa chỉ, thông tin liên hệ"></textarea>
+                </div>
+                
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold transition">
+                        <i class="fas fa-check-circle mr-2"></i> Đăng bán sản phẩm
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Sàn Nông sản Sạch</h3>
+                    <p class="text-gray-400">Kết nối người tiêu dùng với nông sản chất lượng, nguồn gốc rõ ràng.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Về chúng tôi</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Giới thiệu</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Tiêu chuẩn chất lượng</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Quy trình kiểm định</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Đối tác</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Hỗ trợ</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Chính sách bảo mật</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Câu hỏi thường gặp</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Liên hệ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Liên hệ</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                            <span>123 Đường Nông nghiệp, Quận 1, TP.HCM</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt mr-2"></i>
+                            <span>1900 1234</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2"></i>
+                            <span>info@agritech.vn</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+                <p>© 2023 Sàn Nông sản Sạch AgriTech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Product Filtering
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const standardBtns = document.querySelectorAll('.standard-btn');
+            const productCards = document.querySelectorAll('.product-card');
+            
+            // Category filter
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    
+                    // Update active state
+                    categoryBtns.forEach(b => b.classList.remove('active', 'bg-green-600', 'text-white'));
+                    categoryBtns.forEach(b => b.classList.add('bg-green-100', 'text-green-800'));
+                    this.classList.add('active', 'bg-green-600', 'text-white');
+                    this.classList.remove('bg-green-100', 'text-green-800');
+                    
+                    // Filter products
+                    productCards.forEach(card => {
+                        if (category === 'all' || card.dataset.category === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Standard filter
+            standardBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const standard = this.dataset.standard;
+                    
+                    // Update active state
+                    standardBtns.forEach(b => b.classList.remove('active', 'bg-blue-600', 'text-white'));
+                    standardBtns.forEach(b => b.classList.add('bg-blue-100', 'text-blue-800'));
+                    this.classList.add('active', 'bg-blue-600', 'text-white');
+                    this.classList.remove('bg-blue-100', 'text-blue-800');
+                    
+                    // Filter products
+                    productCards.forEach(card => {
+                        if (standard === 'all' || card.dataset.standard === standard) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Product Modal
+            const viewDetailBtns = document.querySelectorAll('.view-detail-btn');
+            const productModal = document.getElementById('product-modal');
+            const closeModal = document.getElementById('close-modal');
+            
+            viewDetailBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    productModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+            
+            closeModal.addEventListener('click', function() {
+                productModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            });
+            
+            // QR Modal
+            const scanQrBtn = document.getElementById('scan-qr-btn');
+            const qrModal = document.getElementById('qr-modal');
+            const closeQrModal = document.getElementById('close-qr-modal');
+            
+            scanQrBtn.addEventListener('click', function() {
+                productModal.classList.add('hidden');
+                qrModal.classList.remove('hidden');
+            });
+            
+            closeQrModal.addEventListener('click', function() {
+                qrModal.classList.add('hidden');
+                productModal.classList.remove('hidden');
+            });
+            
+            // Seller Modal
+            const sellerBtn = document.getElementById('seller-btn');
+            const sellerModal = document.getElementById('seller-modal');
+            const closeSellerModal = document.getElementById('close-seller-modal');
+            
+            sellerBtn.addEventListener('click', function() {
+                sellerModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            closeSellerModal.addEventListener('click', function() {
+                sellerModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            });
+            
+            // Tabs
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    
+                    // Update active tab button
+                    tabBtns.forEach(b => b.classList.remove('active', 'text-green-600', 'border-green-600'));
+                    tabBtns.forEach(b => b.classList.add('text-gray-500'));
+                    this.classList.add('active', 'text-green-600', 'border-green-600');
+                    this.classList.remove('text-gray-500');
+                    
+                    // Show corresponding content
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === tabId) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Quantity buttons
+            const quantityBtns = document.querySelectorAll('.quantity-btn');
+            
+            quantityBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const input = this.parentNode.querySelector('input');
+                    let value = parseInt(input.value);
+                    
+                    if (this.textContent === '+' && value < 100) {
+                        input.value = value + 1;
+                    } else if (this.textContent === '-' && value > 1) {
+                        input.value = value - 1;
+                    }
+                });
+            });
+            
+            // Close modals when clicking outside
+            [productModal, qrModal, sellerModal].forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.classList.add('hidden');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
