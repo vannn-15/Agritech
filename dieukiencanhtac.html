@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử Canh tác</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .map-container {
+            height: 200px;
+            background-image: url('https://maps.googleapis.com/maps/api/staticmap?center=10.8231,106.6297&zoom=12&size=600x300&maptype=roadmap&markers=color:red%7C10.8231,106.6297&key=YOUR_API_KEY');
+            background-size: cover;
+            background-position: center;
+            border-radius: 0.5rem;
+        }
+        
+        .info-card {
+            transition: all 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 640px) {
+            .map-container {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Back Button -->
+        <a href="#" class="inline-flex items-center mb-6 text-green-600 hover:text-green-800 transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i>
+            <span>Quay lại</span>
+        </a>
+        
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">📜 Lịch sử Canh tác & Kinh nghiệm</h1>
+                <p class="text-gray-600 mt-2">Giao diện này giúp nông dân lưu trữ, xem lại và học hỏi từ các vụ mùa trước đó, là cơ sở cho các phân tích hiệu suất và cải tiến.</p>
+            </div>
+            <button class="mt-4 md:mt-0 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow-md transition-colors flex items-center">
+                <i class="fas fa-plus mr-2"></i>
+                Thêm vụ mùa mới
+            </button>
+        </div>
+
+        <!-- Season List -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 info-card">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-list-ul text-amber-600 mr-2"></i>
+                Danh sách Vụ mùa đã qua
+            </h2>
+            <div class="space-y-4">
+                <div class="border-b pb-4 cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors">
+                    <h3 class="font-medium text-gray-800">Vụ Đông Xuân 2023-2024 - Lúa ST25</h3>
+                    <p class="text-gray-600 text-sm">01/11/2023 - 30/03/2024 | Năng suất: 7 tấn/ha</p>
+                </div>
+                <div class="border-b pb-4 cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors">
+                    <h3 class="font-medium text-gray-800">Vụ Hè Thu 2024 - Rau cải xanh</h3>
+                    <p class="text-gray-600 text-sm">15/05/2024 - 30/08/2024 | Năng suất: 2.5 tấn/ha</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Season Details -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 info-card">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                Chi tiết Vụ mùa
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-medium text-gray-700 mb-2">Thông tin cơ bản</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex"><span class="font-medium w-32">Loại cây trồng:</span> Lúa ST25</li>
+                        <li class="flex"><span class="font-medium w-32">Thời gian:</span> 01/11/2023 - 30/03/2024</li>
+                        <li class="flex"><span class="font-medium w-32">Năng suất:</span> 7 tấn/ha</li>
+                        <li class="flex"><span class="font-medium w-32">Chi phí:</span> 15,000,000 VNĐ</li>
+                        <li class="flex"><span class="font-medium w-32">Lợi nhuận:</span> 25,000,000 VNĐ</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-medium text-gray-700 mb-2">Nhật ký hoạt động</h3>
+                    <div class="border-l-2 border-gray-200 pl-4 space-y-4">
+                        <div>
+                            <p class="font-medium text-gray-800">01/11/2023</p>
+                            <p class="text-gray-600">Gieo hạt giống</p>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">15/11/2023</p>
+                            <p class="text-gray-600">Bón phân đợt 1: NPK 16-16-8 (50kg/ha)</p>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">20/12/2023</p>
+                            <p class="text-gray-600">Phát hiện sâu cuốn lá, xử lý bằng thuốc đặc trị</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <h3 class="font-medium text-gray-700 mb-2">Ghi chú & Kinh nghiệm</h3>
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <p class="text-gray-700">"Vụ này gặp nhiều sâu cuốn lá vào tháng 12, cần chủ động phòng ngừa sớm hơn cho vụ sau. Thời tiết có đợt hạn kéo dài 2 tuần vào tháng 2 nhưng giống lúa ST25 chịu hạn tốt."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Future Charts -->
+        <div class="bg-blue-50 rounded-xl shadow-md p-6 border border-blue-100">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>
+                Vị trí Trang trại
+            </h2>
+            <div class="map-container mb-4"></div>
+            <p class="text-gray-600"><i class="fas fa-info-circle text-blue-500 mr-2"></i> Địa chỉ: Ấp 3, Xã An Phú, Huyện Củ Chi, TP.HCM</p>
+            <p class="text-gray-600"><i class="fas fa-compass text-orange-500 mr-2"></i> Tọa độ: 10.8231° Bắc, 106.6297° Đông</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Climate Info -->
+            <div class="bg-white rounded-xl shadow-md p-6 info-card">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-cloud-sun text-blue-500 mr-2"></i>
+                    Đặc điểm Vùng Khí hậu
+                </h2>
+                <div class="space-y-3">
+                    <div class="flex items-start">
+                        <i class="fas fa-temperature-low text-red-400 mt-1 mr-2"></i>
+                        <div>
+                            <p class="font-medium text-gray-700">Loại khí hậu:</p>
+                            <p class="text-gray-600">Nhiệt đới ẩm gió mùa</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-thermometer-half text-orange-400 mt-1 mr-2"></i>
+                        <div>
+                            <p class="font-medium text-gray-700">Nhiệt độ trung bình:</p>
+                            <p class="text-gray-600">25-30°C</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-cloud-rain text-blue-400 mt-1 mr-2"></i>
+                        <div>
+                            <p class="font-medium text-gray-700">Lượng mưa trung bình:</p>
+                            <p class="text-gray-600">1500-2000 mm/năm</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-sun text-yellow-400 mt-1 mr-2"></i>
+                        <div>
+                            <p class="font-medium text-gray-700">Số giờ nắng trung bình:</p>
+                            <p class="text-gray-600">6-8 giờ/ngày</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-calendar-alt text-green-400 mt-1 mr-2"></i>
+                        <div>
+                            <p class="font-medium text-gray-700">Mùa vụ chính:</p>
+                            <p class="text-gray-600">Mùa mưa (Tháng 5 - Tháng 10), Mùa khô (Tháng 11 - Tháng 4)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Soil Info -->
+            <div class="bg-white rounded-xl shadow-md p-6 info-card">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-mountain text-amber-700 mr-2"></i>
+                    Đặc điểm Đất đai
+                </h2>
+                <div class="space-y-3">
+                    <div class="flex items-start">
+                        <i class="fas fa-seedling text-green-600 mt-1 mr-2"></i>
+                        <div>
+                            <p class="font-medium text-gray-700">Loại đất chính:</p>
+                            <p class="text-gray-600">Đất phù sa</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-flask text-purple-500 mt-1 mr-2"></i>
+                        <div>
+                            <p class="font-medium text-gray-700">Độ pH:</p>
+                            <div class="flex items-center">
+                                <p class="text-gray-600 mr-2">pH 6.0 - 6.5</p>
+                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Tốt</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-layer-group text-brown-500 mt-1 mr-2"></i>
+                        <div>
+                            <p class="font-medium text-gray-700">Thành phần đất:</p>
+                            <p class="text-gray-600">Đất thịt nhẹ, giàu hữu cơ</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-tint text-blue-300 mt-1 mr-2"></i>
+                        <div>
+                            <p class="font-medium text-gray-700">Độ ẩm đất trung bình:</p>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-blue-500 h-2.5 rounded-full" style="width: 65%"></div>
+                            </div>
+                            <p class="text-gray-600 text-sm mt-1">65% (Cập nhật: Hôm nay, 10:30 AM)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Infrastructure -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 info-card">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-tools text-gray-600 mr-2"></i>
+                Thông tin Hạ tầng
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-medium text-gray-700 mb-2 flex items-center">
+                        <i class="fas fa-water mr-2 text-blue-400"></i>
+                        Nguồn nước tưới
+                    </h3>
+                    <ul class="space-y-2 text-gray-600 pl-6">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Sông Sài Gòn (cách 500m)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Giếng khoan (2 giếng, sâu 30m)</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-medium text-gray-700 mb-2 flex items-center">
+                        <i class="fas fa-sprinkler mr-2 text-green-400"></i>
+                        Hệ thống tưới
+                    </h3>
+                    <ul class="space-y-2 text-gray-600 pl-6">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Tưới phun bán tự động (3ha)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Tưới thủ công (1ha)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Analysis -->
+        <div class="bg-blue-50 rounded-xl shadow-md p-6 border border-blue-100">
+            <h2 class="text-xl font-semibold text-blue-800 mb-4 flex items-center">
+                <i class="fas fa-chart-line text-blue-500 mr-2"></i>
+                Phân tích hiệu suất
+            </h2>
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <p class="font-medium text-gray-800 mb-2">So sánh năng suất các vụ lúa</p>
+                    <div class="h-40 bg-gray-100 rounded flex items-center justify-center text-gray-500">
+                        [Biểu đồ so sánh sẽ hiển thị ở đây]
+                    </div>
+                </div>
+                <div class="flex items-start bg-white p-4 rounded-lg shadow-sm">
+                    <div class="bg-green-100 p-2 rounded-full mr-3">
+                        <i class="fas fa-lightbulb text-green-600"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-800">Bài học từ lịch sử</p>
+                        <p class="text-gray-600">Dữ liệu từ các vụ trước giúp AI phân tích và đưa ra khuyến nghị chính xác hơn cho các vụ sau</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple script for back button functionality
+        document.querySelector('a[href="#"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            // In a real app, this would navigate back or to a specific page
+            alert('Chức năng quay lại sẽ đưa bạn về trang trước đó');
+        });
+        
+        // Update button functionality
+        document.querySelector('button').addEventListener('click', function() {
+            // In a real app, this would open an edit form
+            alert('Mở form cập nhật thông tin trang trại');
+        });
+    </script>
+</body>
+</html>
